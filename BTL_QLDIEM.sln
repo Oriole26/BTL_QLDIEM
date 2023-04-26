@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33328.57
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BTL_QLDIEM", "BTL_QLDIEM\BTL_QLDIEM.csproj", "{FEAD52E5-6EFA-454B-95CF-D8102099BE91}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FEAD52E5-6EFA-454B-95CF-D8102099BE91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEAD52E5-6EFA-454B-95CF-D8102099BE91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEAD52E5-6EFA-454B-95CF-D8102099BE91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEAD52E5-6EFA-454B-95CF-D8102099BE91}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {156F1BD9-A0A1-411B-BF26-2658F14DA715}
+	EndGlobalSection
+EndGlobal
