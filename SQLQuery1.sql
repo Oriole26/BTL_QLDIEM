@@ -89,6 +89,8 @@ CREATE TABLE tblHocKy
 INSERT INTO tblHocKy VALUES('HK1', N'Học Kỳ 1', 1)
 INSERT INTO tblHocKy VALUES('HK2', N'Học Kỳ 2', 2)
 
+select * from tblHocKy
+
 /*Năm học*/
 CREATE TABLE tblNamHoc
 (
@@ -125,7 +127,11 @@ INSERT INTO tblDiem
 VALUES('LOP611920','HS01','NH1920','HK1','SINHHOC', 7.5, 6.5,8,7.5),
 	  ('LOP621920','HS02','NH1920','HK1','SINHHOC', 7, 8,8,8)
 
-	  Select*from tblDiem
+INSERT INTO tblDiem
+VALUES('LOP611920','HS01','NH1920','HK1','AMNHAC', 7.5, 6.5,8,7.5)
+
+Select*from tblDiem
+
 CREATE TABLE tblKhoiLop (
 							sMaKhoiLop VARCHAR(6) PRIMARY KEY,
 							sTenKhoiLop NVARCHAR(30)
@@ -139,6 +145,7 @@ VALUES
 ('KHOI8',N'Khối 8'),
 ('KHOI9',N'Khối 9')
 
+select * from tblKhoiLop
 CREATE TABLE tblGiaoVien (
 							sMaGV VARCHAR(6) PRIMARY KEY,
 							sTenGV NVARCHAR(30),
@@ -534,12 +541,43 @@ BEGIN
 END
 
 
--- Lay ra ma va ten HS theo maLH
-CREATE PROC hs_by_maLH 
+-- Lay ra ma va ten mon hoc
+CREATE PROC tblMonHoc_SelectMa_Ten
+AS
+BEGIN
+	SELECT sMaMH,sTenMH
+	FROM tblMonHoc
+END
+
+
+
+-- Lay thong tin HS theo maLH
+alter PROC hs_by_maLH 
 @maLH VARCHAR(10)
 AS
 BEGIN
-	SELECT sMaHS,sHoTenHS
-	FROM tblHocSinh
-	WHERE sMaLH = @maLH
+	SELECT hs.sMaHS, hs.sHoTenHS, d.sMaNamHoc, d.sMaHocKy, d.sMaMH, d.fDiemMieng, d.fDiem15P, d.fDiem45p, d.fDiemHocKy
+	FROM tblHocSinh AS hs
+	LEFT JOIN tblDiem AS d
+	ON  d.sMaHS =	hs.sMaHS 
+	where hs.sMaLH = @maLH
+END
+
+select * from tblDiem
+delete from tblDiem where iSTT = 7
+
+--Lay thong tin nam hoc
+CREATE PROC select_all_nh
+AS
+BEGIN
+	SELECT *
+	FROM tblNamHoc
+END
+
+--Lay thong tin hoc ky
+CREATE PROC select_all_hk
+AS
+BEGIN
+	SELECT *
+	FROM tblHocKy
 END
