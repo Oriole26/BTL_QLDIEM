@@ -76,12 +76,13 @@ namespace BTL_QLDIEM
             // 
             // grvKL
             // 
+            this.grvKL.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.grvKL.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grvKL.Location = new System.Drawing.Point(385, 45);
             this.grvKL.Name = "grvKL";
             this.grvKL.RowHeadersWidth = 51;
             this.grvKL.RowTemplate.Height = 24;
-            this.grvKL.Size = new System.Drawing.Size(323, 196);
+            this.grvKL.Size = new System.Drawing.Size(347, 204);
             this.grvKL.TabIndex = 4;
             this.grvKL.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grvKL_CellContentClick);
             // 

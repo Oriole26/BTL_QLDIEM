@@ -39,30 +39,7 @@ namespace BTL_QLDIEM
             }
 
         }
-        public bool KTThongTin()
-        {
-            if (txtMaMH.Text == "")
-            {
-                MessageBox.Show("Vui lòng nhập mã môn học", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                txtMaMH.Focus();
-                return false;
-            }
-            if (txtTenMH.Text == "")
-            {
-                MessageBox.Show("Vui lòng nhập tên môn học", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                txtTenMH.Focus();
-                return false;
-            }
-           
-            if (txtSotiet.Text == "")
-            {
-                MessageBox.Show("Vui lòng nhập số tiết học", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                txtSotiet.Focus();
-                return false;
-            }
-            
-            return true;
-        }
+        
         //hiện danh sách môn học
         private void hienDSMH()
         {
@@ -86,6 +63,7 @@ namespace BTL_QLDIEM
         //Thêm môn học
         private void btnThem_Click(object sender, EventArgs e)
         {
+            bool check = true;
             string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
             using (SqlConnection cnn = new SqlConnection(constr))
             {
@@ -101,10 +79,31 @@ namespace BTL_QLDIEM
                     {
                         MessageBox.Show("Bạn đã nhập trùng mã!", "Thông báo", MessageBoxButtons.OK);
                     }
-                    else if (KTThongTin())
+                    if (txtMaMH.Text.Trim().Length == 0)
                     {
-                     
-                       using (SqlCommand Cmd = new SqlCommand("tblMonHoc_Insert", cnn))
+                        errorProviderMH.SetError(txtMaMH, "Vui lòng nhập mã môn học ! ");
+                        check = false;
+                    }
+                    else errorProviderMH.SetError(txtMaMH, "");
+
+
+                    if (txtTenMH.Text.Trim().Length == 0)
+                    {
+                        errorProviderMH.SetError(txtTenMH, "Vui lòng nhập tên môn học!");
+                        check = false;
+                    }
+                    else errorProviderMH.SetError(txtTenMH, "");
+
+                    if (txtSotiet.Text.Trim().Length == 0)
+                    {
+                        errorProviderMH.SetError(txtSotiet, "Vui lòng nhập sĩ số!");
+                        check = false;
+                    }
+                    else errorProviderMH.SetError(txtSotiet, "");
+
+                    if(check)
+                    {
+                        using (SqlCommand Cmd = new SqlCommand("tblMonHoc_Insert", cnn))
                         {
                             Cmd.CommandType = System.Data.CommandType.StoredProcedure;
                             Cmd.Parameters.Add(new SqlParameter("@mamh", txtMaMH.Text));
@@ -116,15 +115,21 @@ namespace BTL_QLDIEM
                             hienDSMH();
                         }
                     }
+                    
+                    
                 }
             }
         }
+    
         //Sửa môn học
 
 
         private void frMonhoc_Load(object sender, EventArgs e)
         {
             hienDSMH();
+            grvMH.Columns[0].HeaderText = "Mã môn học";
+            grvMH.Columns[1].HeaderText = "Tên môn học";
+            grvMH.Columns[2].HeaderText = "Số tiết";
         }
 
         private void grvMH_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -138,36 +143,29 @@ namespace BTL_QLDIEM
 
         private void btnSua_Click(object sender, EventArgs e)
         {
-            if (txtMaMH.Text == "")
+            string maMHsua = (string)grvMH.CurrentRow.Cells["sMaMH"].Value;
+            if (MessageBox.Show(string.Format("Bạn có muốn sửa môn học có mã : {0} ?", maMHsua), "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                MessageBox.Show("Vui lòng nhập mã môn học cần sửa", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                txtMaMH.Focus();
-            }
-            else if (KTThongTin())
-            {
-                try
+                string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
+                using (SqlConnection cnn = new SqlConnection(constr))
                 {
-                    SqlConnection cnn = new SqlConnection();
-                    cnn.ConnectionString = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
-                    SqlCommand cmd = new SqlCommand();
-                    cmd.CommandText = "tblMonHoc_Update";
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@mamh", SqlDbType.VarChar).Value = txtMaMH.Text;
-                    cmd.Parameters.Add("@tenmh", SqlDbType.NVarChar).Value = txtTenMH.Text;
-                    cmd.Parameters.Add("@Sotiet", SqlDbType.NVarChar).Value = txtSotiet.Text;
-                    cmd.Connection = cnn;
-                    cnn.Open();
-                    cmd.ExecuteNonQuery();
-                    cnn.Close();
-                    hienDSMH();
-                    ResetMH();
-                    MessageBox.Show("Đã sửa môn học thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    using (SqlCommand cmd = cnn.CreateCommand())
+                    {
+
+
+                        cmd.CommandText = " tblMonHoc_Update";
+                        cmd.Parameters.AddWithValue("@mamh", maMHsua);
+                        cmd.Parameters.AddWithValue("@tenhs", txtTenMH.Text);
+                        cmd.Parameters.AddWithValue("@Sotiet", txtSotiet.Text);
+                        cnn.Open();
+                        cmd.ExecuteNonQuery();
+                        cnn.Close();
+                    }
+
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+
             }
+            hienDSMH();
         }
         private void ResetMH()
         {
@@ -181,43 +179,38 @@ namespace BTL_QLDIEM
             ResetMH();
         }
 
-        private void btnThoat_Click(object sender, EventArgs e)
-        {
-            DialogResult dg = MessageBox.Show("Bạn có chắc muốn thoát?", "Thông báo", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
-            if (dg == DialogResult.OK)
-            {
-                Application.Exit();
-            }
-        }
+      
 
         private void btnXoa_Click(object sender, EventArgs e)
         {
-            if (txtMaMH.Text == "")
+            string MaMH_xoa = (string)grvMH.CurrentRow.Cells["sMaMH"].Value;
+            if (MessageBox.Show(string.Format("Bạn có muốn xóa môn học có mã : {0} ?", MaMH_xoa), "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                MessageBox.Show("Vui lòng nhập mã môn học cần xoá", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                txtMaMH.Focus();
-            }
-            else
-            {
-                try
+                string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
+                using (SqlConnection cnn = new SqlConnection(constr))
                 {
-                    SqlConnection cnn = new SqlConnection();
-                    cnn.ConnectionString = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
-                    SqlCommand cmd = new SqlCommand();
-                    cmd.CommandText = "tblMonHoc_Xoa";
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@mamh", SqlDbType.VarChar).Value = txtMaMH.Text;
-                    cmd.Connection = cnn;
-                    cnn.Open();
-                    hienDSMH();
-                    ResetMH();
-                    MessageBox.Show("Đã xóa môn học thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+                    using (SqlCommand cmd = new SqlCommand("tblMonHoc_Xoa", cnn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@mamh", MaMH_xoa);
+                        cnn.Open();
+                        cmd.ExecuteNonQuery();
+                        cnn.Close();
+                    }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+                hienDSMH();
+            }
+        }
+
+        private void btnThoat_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Bạn có muốn thoát không? ", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                this.Hide();
+                MainForm trangchu = new MainForm();
+                trangchu.ShowDialog();
+                this.Close();
             }
         }
     }

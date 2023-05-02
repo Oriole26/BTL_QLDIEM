@@ -62,6 +62,9 @@ namespace BTL_QLDIEM
         private void FrNamhoc_Load(object sender, EventArgs e)
         {
             hienDSNH();
+            grvNH.Columns[0].HeaderText = "Mã năm học";
+            grvNH.Columns[1].HeaderText = "Tên năm học";
+        
         }
         //Thêm năm học 
         private void btnThem_Click(object sender, EventArgs e)
@@ -145,6 +148,52 @@ namespace BTL_QLDIEM
             }
             hienDSNH();
 
+        }
+        //Xoá năm học
+
+        private void btnXoa_Click(object sender, EventArgs e)
+        {
+            string MaNH_xoa = (string)grvNH.CurrentRow.Cells["sMaNamHoc"].Value;
+            if (MessageBox.Show(string.Format("Bạn có muốn xóa năm học có mã : {0} ?", MaNH_xoa), "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
+                using (SqlConnection cnn = new SqlConnection(constr))
+                {
+
+                    using (SqlCommand cmd = new SqlCommand("tblNamhoc_Delete", cnn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@smaNH", MaNH_xoa);
+                        cnn.Open();
+                        cmd.ExecuteNonQuery();
+                        cnn.Close();
+                    }
+                }
+                hienDSNH();
+            }
+        }
+        //Reset lại thông tin
+        private void ResetNH()
+        {
+            txtmaNH.Text = "";
+            txttenNH.Text = "";
+           
+        }
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            ResetNH();
+        }
+        //trở về trang chủ
+        private void btnHome_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Bạn có muốn thoát không? ", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                this.Hide();
+                MainForm trangchu = new MainForm();
+                trangchu.ShowDialog();
+                this.Close();
+            }
         }
     }
 }

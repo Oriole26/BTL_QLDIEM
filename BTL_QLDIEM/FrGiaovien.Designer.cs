@@ -42,7 +42,6 @@ namespace BTL_QLDIEM
             this.txtSDT = new System.Windows.Forms.TextBox();
             this.cbGT = new System.Windows.Forms.ComboBox();
             this.cbMaMH = new System.Windows.Forms.ComboBox();
-            this.btnSearch = new System.Windows.Forms.Button();
             this.btnReset = new System.Windows.Forms.Button();
             this.btnThoat = new System.Windows.Forms.Button();
             this.btnXoa = new System.Windows.Forms.Button();
@@ -51,6 +50,9 @@ namespace BTL_QLDIEM
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.grvGV = new System.Windows.Forms.DataGridView();
             this.errorProviderGV = new System.Windows.Forms.ErrorProvider(this.components);
+            this.txtTK = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.btnBC = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.grvGV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProviderGV)).BeginInit();
             this.SuspendLayout();
@@ -156,15 +158,6 @@ namespace BTL_QLDIEM
             this.cbMaMH.Size = new System.Drawing.Size(114, 24);
             this.cbMaMH.TabIndex = 11;
             // 
-            // btnSearch
-            // 
-            this.btnSearch.Location = new System.Drawing.Point(617, 306);
-            this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(91, 40);
-            this.btnSearch.TabIndex = 28;
-            this.btnSearch.Text = "Tìm kiếm";
-            this.btnSearch.UseVisualStyleBackColor = true;
-            // 
             // btnReset
             // 
             this.btnReset.Location = new System.Drawing.Point(504, 306);
@@ -177,7 +170,7 @@ namespace BTL_QLDIEM
             // 
             // btnThoat
             // 
-            this.btnThoat.Location = new System.Drawing.Point(734, 306);
+            this.btnThoat.Location = new System.Drawing.Point(636, 306);
             this.btnThoat.Name = "btnThoat";
             this.btnThoat.Size = new System.Drawing.Size(91, 40);
             this.btnThoat.TabIndex = 26;
@@ -226,6 +219,7 @@ namespace BTL_QLDIEM
             // 
             // grvGV
             // 
+            this.grvGV.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.grvGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grvGV.Location = new System.Drawing.Point(13, 373);
             this.grvGV.Name = "grvGV";
@@ -239,13 +233,42 @@ namespace BTL_QLDIEM
             // 
             this.errorProviderGV.ContainerControl = this;
             // 
+            // txtTK
+            // 
+            this.txtTK.Location = new System.Drawing.Point(378, 33);
+            this.txtTK.Name = "txtTK";
+            this.txtTK.Size = new System.Drawing.Size(238, 22);
+            this.txtTK.TabIndex = 31;
+            this.txtTK.TextChanged += new System.EventHandler(this.txtTK_TextChanged);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(233, 37);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(125, 17);
+            this.label7.TabIndex = 32;
+            this.label7.Text = "Tìm kiếm giáo viên";
+            // 
+            // btnBC
+            // 
+            this.btnBC.Location = new System.Drawing.Point(755, 306);
+            this.btnBC.Name = "btnBC";
+            this.btnBC.Size = new System.Drawing.Size(91, 40);
+            this.btnBC.TabIndex = 33;
+            this.btnBC.Text = "Báo cáo";
+            this.btnBC.UseVisualStyleBackColor = true;
+            this.btnBC.Click += new System.EventHandler(this.btnBC_Click);
+            // 
             // FrGiaovien
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(996, 574);
+            this.Controls.Add(this.btnBC);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.txtTK);
             this.Controls.Add(this.grvGV);
-            this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.btnReset);
             this.Controls.Add(this.btnThoat);
             this.Controls.Add(this.btnXoa);
@@ -288,7 +311,6 @@ namespace BTL_QLDIEM
         private System.Windows.Forms.TextBox txtSDT;
         private System.Windows.Forms.ComboBox cbGT;
         private System.Windows.Forms.ComboBox cbMaMH;
-        private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.Button btnReset;
         private System.Windows.Forms.Button btnThoat;
         private System.Windows.Forms.Button btnXoa;
@@ -297,5 +319,8 @@ namespace BTL_QLDIEM
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.DataGridView grvGV;
         private System.Windows.Forms.ErrorProvider errorProviderGV;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox txtTK;
+        private System.Windows.Forms.Button btnBC;
     }
 }

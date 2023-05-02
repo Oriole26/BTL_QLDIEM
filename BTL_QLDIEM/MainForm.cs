@@ -80,7 +80,30 @@ namespace BTL_QLDIEM
         {
 
         }
-    
+        bool isThoat = true;
+        private void mnuDangxuat_Click(object sender, EventArgs e)
+        {
+            isThoat = false;
+            
+            this.Close();
+            FrDangnhap dangnhap = new FrDangnhap();
+            dangnhap.Show();
+        }
+
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if(isThoat)
+            Application.Exit();
+           
+        }
+
+        private void mnuDangnhap_Click(object sender, EventArgs e)
+        {
+         
+            FrDangnhap dangnhap = new FrDangnhap();
+            dangnhap.Show();
+            this.Hide();
+        }
     }
     
 }
