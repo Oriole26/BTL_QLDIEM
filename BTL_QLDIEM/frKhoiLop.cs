@@ -79,6 +79,9 @@ namespace BTL_QLDIEM
             private void frKhoiLop_Load(object sender, EventArgs e)
         {
             hienDSKL();
+            grvKL.Columns[0].HeaderText = "Mã khối";
+            grvKL.Columns[1].HeaderText = "Tên khối";
+
         }
 
         private void btnThem_Click(object sender, EventArgs e)
@@ -204,10 +207,12 @@ namespace BTL_QLDIEM
 
         private void btnThoat_Click(object sender, EventArgs e)
         {
-            DialogResult dg = MessageBox.Show("Bạn có chắc muốn thoát?", "Thông báo", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
-            if (dg == DialogResult.OK)
+            if (MessageBox.Show("Bạn có muốn thoát không? ", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                Application.Exit();
+                this.Hide();
+                MainForm trangchu = new MainForm();
+                trangchu.ShowDialog();
+                this.Close();
             }
         }
     }

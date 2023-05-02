@@ -132,6 +132,7 @@ namespace BTL_QLDIEM
                 cnn.Open();
                 if (cnn.State == ConnectionState.Closed)
                     return;
+
             }
         }
     }

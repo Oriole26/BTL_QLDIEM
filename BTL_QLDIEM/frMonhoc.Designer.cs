@@ -29,6 +29,7 @@ namespace BTL_QLDIEM
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.txtSotiet = new System.Windows.Forms.TextBox();
             this.txtTenMH = new System.Windows.Forms.TextBox();
@@ -43,8 +44,10 @@ namespace BTL_QLDIEM
             this.btnXoa = new System.Windows.Forms.Button();
             this.btnThoat = new System.Windows.Forms.Button();
             this.btnDatlai = new System.Windows.Forms.Button();
+            this.errorProviderMH = new System.Windows.Forms.ErrorProvider(this.components);
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grvMH)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProviderMH)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -121,6 +124,7 @@ namespace BTL_QLDIEM
             // 
             // grvMH
             // 
+            this.grvMH.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.grvMH.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grvMH.Location = new System.Drawing.Point(441, 56);
             this.grvMH.Name = "grvMH";
@@ -166,7 +170,7 @@ namespace BTL_QLDIEM
             this.btnThoat.Name = "btnThoat";
             this.btnThoat.Size = new System.Drawing.Size(90, 34);
             this.btnThoat.TabIndex = 6;
-            this.btnThoat.Text = "Thoát";
+            this.btnThoat.Text = "Home";
             this.btnThoat.UseVisualStyleBackColor = true;
             this.btnThoat.Click += new System.EventHandler(this.btnThoat_Click);
             // 
@@ -179,6 +183,10 @@ namespace BTL_QLDIEM
             this.btnDatlai.Text = "Đặt lại";
             this.btnDatlai.UseVisualStyleBackColor = true;
             this.btnDatlai.Click += new System.EventHandler(this.btnDatlai_Click);
+            // 
+            // errorProviderMH
+            // 
+            this.errorProviderMH.ContainerControl = this;
             // 
             // frMonhoc
             // 
@@ -199,6 +207,7 @@ namespace BTL_QLDIEM
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grvMH)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProviderMH)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -220,5 +229,6 @@ namespace BTL_QLDIEM
         private System.Windows.Forms.Button btnXoa;
         private System.Windows.Forms.Button btnThoat;
         private System.Windows.Forms.Button btnDatlai;
+        private System.Windows.Forms.ErrorProvider errorProviderMH;
     }
 }

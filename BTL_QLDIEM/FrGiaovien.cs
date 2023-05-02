@@ -82,6 +82,12 @@ namespace BTL_QLDIEM
         private void FrGiaovien_Load(object sender, EventArgs e)
         {
             hienDSGV();
+            grvGV.Columns[0].HeaderText = "Mã GV";
+            grvGV.Columns[1].HeaderText = "Tên GV";
+            grvGV.Columns[2].HeaderText = "Giới tính";
+            grvGV.Columns[3].HeaderText = "Địa chỉ";
+            grvGV.Columns[4].HeaderText = "SDT";
+            grvGV.Columns[5].HeaderText = "Mã MH";
             
 
         }
@@ -152,7 +158,14 @@ namespace BTL_QLDIEM
                             check = false;
                         }
                         else errorProviderGV.SetError(cbMaMH, "");
-                        if(check)
+                        if(txtSDT.Text.Length > 10 )
+                        {
+                            errorProviderGV.SetError(txtSDT, "Số điện thoại vượt quá 10 số !");
+                            check = false;
+                        }
+                       
+                        else errorProviderGV.SetError(txtSDT, "");
+                        if (check)
                         {
                             using (SqlCommand Cmd = new SqlCommand("tblGV_Insert", cnn))
                             {
@@ -269,6 +282,63 @@ namespace BTL_QLDIEM
         private void btnReset_Click(object sender, EventArgs e)
         {
             ResetGV();
+        }
+
+        private void txtTK_TextChanged(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(txtTK.Text))
+            {
+                string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
+                using (SqlConnection cnn = new SqlConnection(constr))
+                {
+                    cnn.Open();
+                    if (cnn.State == System.Data.ConnectionState.Closed)
+                        return;
+                    using (SqlCommand sqlCmd = new SqlCommand("tblGiaoVien_Search", cnn))
+                    {
+                        sqlCmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        sqlCmd.Parameters.Add(new SqlParameter("@tengv", txtTK.Text));
+                        using (SqlDataReader reader = sqlCmd.ExecuteReader())
+                        {
+                            DataTable dt = new DataTable();
+                            dt.Load(reader);
+                            grvGV.DataSource = dt;
+                        }
+                    }
+                }
+                
+            }
+        }
+
+        private void btnBC_Click(object sender, EventArgs e)
+        {
+            string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
+            using (SqlConnection cnn = new SqlConnection(constr))
+            {
+                cnn.Open();
+                if (cnn.State == ConnectionState.Closed)
+                    return;
+                using (SqlCommand cmd = new SqlCommand("tblGV_Select", cnn))
+                {
+                    
+
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        DataTable tbl = new DataTable();
+                        tbl.Clear();
+                        tbl.Load(reader);
+                        grvGV.DataSource = tbl;
+                        crpDSGV baocao = new crpDSGV();
+                        baocao.SetDataSource(tbl);
+                        dtGV bcDSGV = new dtGV();
+                        frDSGV DSGV = new frDSGV();
+                       DSGV.crystalReportViewer1.ReportSource = baocao;
+                        DSGV.ShowDialog();
+                    }
+                }
+
+            }
         }
     }
 }

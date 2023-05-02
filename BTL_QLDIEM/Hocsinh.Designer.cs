@@ -31,8 +31,8 @@ namespace BTL_QLDIEM
         {
             this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.txtTimkiem = new System.Windows.Forms.TextBox();
+            this.cbMaLH = new System.Windows.Forms.ComboBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.btnReset = new System.Windows.Forms.Button();
             this.btnHuy = new System.Windows.Forms.Button();
             this.btnXoa = new System.Windows.Forms.Button();
@@ -50,10 +50,10 @@ namespace BTL_QLDIEM
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.txtTimkiem = new System.Windows.Forms.TextBox();
             this.grvHS = new System.Windows.Forms.DataGridView();
             this.errorProviderHS = new System.Windows.Forms.ErrorProvider(this.components);
-            this.label8 = new System.Windows.Forms.Label();
-            this.cbMaLH = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grvHS)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProviderHS)).BeginInit();
@@ -61,10 +61,9 @@ namespace BTL_QLDIEM
             // 
             // groupBox1
             // 
+            this.groupBox1.AutoSize = true;
             this.groupBox1.Controls.Add(this.cbMaLH);
             this.groupBox1.Controls.Add(this.label8);
-            this.groupBox1.Controls.Add(this.label7);
-            this.groupBox1.Controls.Add(this.txtTimkiem);
             this.groupBox1.Controls.Add(this.btnReset);
             this.groupBox1.Controls.Add(this.btnHuy);
             this.groupBox1.Controls.Add(this.btnXoa);
@@ -82,33 +81,33 @@ namespace BTL_QLDIEM
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Location = new System.Drawing.Point(3, 27);
+            this.groupBox1.Location = new System.Drawing.Point(3, 73);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1057, 284);
+            this.groupBox1.Size = new System.Drawing.Size(1057, 299);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Thông tin học sinh";
             // 
-            // label7
+            // cbMaLH
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(905, 147);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(64, 17);
-            this.label7.TabIndex = 23;
-            this.label7.Text = "Tìm kiếm";
+            this.cbMaLH.FormattingEnabled = true;
+            this.cbMaLH.Location = new System.Drawing.Point(819, 47);
+            this.cbMaLH.Name = "cbMaLH";
+            this.cbMaLH.Size = new System.Drawing.Size(121, 24);
+            this.cbMaLH.TabIndex = 25;
             // 
-            // txtTimkiem
+            // label8
             // 
-            this.txtTimkiem.Location = new System.Drawing.Point(832, 177);
-            this.txtTimkiem.Name = "txtTimkiem";
-            this.txtTimkiem.Size = new System.Drawing.Size(183, 22);
-            this.txtTimkiem.TabIndex = 22;
-            this.txtTimkiem.TextChanged += new System.EventHandler(this.txtTimkiem_TextChanged);
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(749, 51);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(49, 17);
+            this.label8.TabIndex = 24;
+            this.label8.Text = "Mã LH";
             // 
             // btnReset
             // 
-            this.btnReset.Location = new System.Drawing.Point(682, 238);
+            this.btnReset.Location = new System.Drawing.Point(566, 238);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(91, 40);
             this.btnReset.TabIndex = 20;
@@ -118,11 +117,11 @@ namespace BTL_QLDIEM
             // 
             // btnHuy
             // 
-            this.btnHuy.Location = new System.Drawing.Point(559, 238);
+            this.btnHuy.Location = new System.Drawing.Point(708, 238);
             this.btnHuy.Name = "btnHuy";
             this.btnHuy.Size = new System.Drawing.Size(91, 40);
             this.btnHuy.TabIndex = 19;
-            this.btnHuy.Text = "Huỷ";
+            this.btnHuy.Text = "Home";
             this.btnHuy.UseVisualStyleBackColor = true;
             this.btnHuy.Click += new System.EventHandler(this.btnHuy_Click);
             // 
@@ -256,14 +255,32 @@ namespace BTL_QLDIEM
             this.label1.TabIndex = 0;
             this.label1.Text = "Mã HS";
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(409, 35);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(64, 17);
+            this.label7.TabIndex = 23;
+            this.label7.Text = "Tìm kiếm";
+            // 
+            // txtTimkiem
+            // 
+            this.txtTimkiem.Location = new System.Drawing.Point(482, 32);
+            this.txtTimkiem.Name = "txtTimkiem";
+            this.txtTimkiem.Size = new System.Drawing.Size(229, 22);
+            this.txtTimkiem.TabIndex = 22;
+            this.txtTimkiem.TextChanged += new System.EventHandler(this.txtTimkiem_TextChanged);
+            // 
             // grvHS
             // 
+            this.grvHS.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.grvHS.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.grvHS.Location = new System.Drawing.Point(3, 317);
+            this.grvHS.Location = new System.Drawing.Point(3, 378);
             this.grvHS.Name = "grvHS";
             this.grvHS.RowHeadersWidth = 51;
             this.grvHS.RowTemplate.Height = 24;
-            this.grvHS.Size = new System.Drawing.Size(1057, 186);
+            this.grvHS.Size = new System.Drawing.Size(1057, 206);
             this.grvHS.TabIndex = 1;
             this.grvHS.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grvHS_CellContentClick);
             // 
@@ -271,30 +288,15 @@ namespace BTL_QLDIEM
             // 
             this.errorProviderHS.ContainerControl = this;
             // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(727, 44);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(49, 17);
-            this.label8.TabIndex = 24;
-            this.label8.Text = "Mã LH";
-            // 
-            // cbMaLH
-            // 
-            this.cbMaLH.FormattingEnabled = true;
-            this.cbMaLH.Location = new System.Drawing.Point(797, 40);
-            this.cbMaLH.Name = "cbMaLH";
-            this.cbMaLH.Size = new System.Drawing.Size(121, 24);
-            this.cbMaLH.TabIndex = 25;
-            // 
             // Hocsinh
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1056, 505);
+            this.ClientSize = new System.Drawing.Size(1056, 561);
             this.Controls.Add(this.grvHS);
             this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.txtTimkiem);
             this.Name = "Hocsinh";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -303,6 +305,7 @@ namespace BTL_QLDIEM
             ((System.ComponentModel.ISupportInitialize)(this.grvHS)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProviderHS)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 

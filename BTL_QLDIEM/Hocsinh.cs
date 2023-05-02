@@ -65,8 +65,18 @@ namespace BTL_QLDIEM
         private void Form1_Load(object sender, EventArgs e)
         {
             hienDSHS();
+            grvHS.Columns[0].HeaderText = "Mã HS";
+            grvHS.Columns[1].HeaderText = "Tên HS";
+            grvHS.Columns[2].HeaderText = "Ngày sinh";
+            grvHS.Columns[3].HeaderText = "Giới tính";
+            grvHS.Columns[4].HeaderText = "Địa chỉ";
+            grvHS.Columns[5].HeaderText = "Dân tộc";
+            grvHS.Columns[6].HeaderText = "Mã LH";
+
+
+
         }
-        
+
         private void btnThem_Click(object sender, EventArgs e)
         {
             bool check = true;
@@ -116,10 +126,13 @@ namespace BTL_QLDIEM
 
                     if (txtDT.Text.Trim().Length == 0)
                     {
-                        errorProviderHS.SetError(txtDT, "Vui lòng nhập số điện thoại !");
+                        errorProviderHS.SetError(txtDT, "Vui lòng nhập dân tộc !");
                         check = false;
                     }
                     else errorProviderHS.SetError(txtDT, "");
+                    
+
+                   //kiểm tra ngày sinh k được vượt quá ngày hiện tại
 
 
                    
@@ -208,40 +221,34 @@ namespace BTL_QLDIEM
 
         private void btnXoa_Click(object sender, EventArgs e)
         {
-            if (txtMa.Text == "")
+            string MaHS_xoa = (string)grvHS.CurrentRow.Cells["sMaHS"].Value;
+            if (MessageBox.Show(string.Format("Bạn có muốn xóa học sinh có mã : {0} ?", MaHS_xoa), "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                MessageBox.Show("Vui lòng nhập mã học sinh cần xoá", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                txtMa.Focus();
-            }
-            else
-            {
-                try
+                string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
+                using (SqlConnection cnn = new SqlConnection(constr))
                 {
-                    SqlConnection cnn = new SqlConnection();
-                    cnn.ConnectionString = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
-                    SqlCommand cmd = new SqlCommand();
-                    cmd.CommandText = "tblHocSinh_Xoa";
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@Mahs",SqlDbType.VarChar).Value = txtMa.Text;
-                    cmd.Connection = cnn;
-                    cnn.Open();
-                    hienDSHS();
-                    ResetHS();
-                    MessageBox.Show("Đã xóa học sinh thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                } catch(Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
+                    using (SqlCommand cmd = new SqlCommand("tblHocSinh_Xoa", cnn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@Mahs", MaHS_xoa);
+                        cnn.Open();
+                        cmd.ExecuteNonQuery();
+                        cnn.Close();
+                    }
                 }
-              }
+                hienDSHS();
+            }
         }
 
         private void btnHuy_Click(object sender, EventArgs e)
         {
-            DialogResult dg = MessageBox.Show("Bạn có chắc muốn thoát?", "Thông báo", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
-            if (dg == DialogResult.OK)
+            if (MessageBox.Show("Bạn có muốn thoát không? ", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                Application.Exit();
+                this.Hide();
+                MainForm trangchu = new MainForm();
+                trangchu.ShowDialog();
+                this.Close();
             }
         }
 

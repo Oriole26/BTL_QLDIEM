@@ -29,6 +29,7 @@ namespace BTL_QLDIEM
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -40,17 +41,18 @@ namespace BTL_QLDIEM
             this.txtSiso = new System.Windows.Forms.TextBox();
             this.cbMaKL = new System.Windows.Forms.ComboBox();
             this.cbMaGV = new System.Windows.Forms.ComboBox();
-            this.txtNamhoc = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.grvLH = new System.Windows.Forms.DataGridView();
-            this.btnThem = new System.Windows.Forms.Button();
-            this.btnSua = new System.Windows.Forms.Button();
-            this.btnXoa = new System.Windows.Forms.Button();
-            this.btnReset = new System.Windows.Forms.Button();
-            this.btnTimkiem = new System.Windows.Forms.Button();
+            this.cbNH = new System.Windows.Forms.ComboBox();
             this.btnHome = new System.Windows.Forms.Button();
+            this.btnReset = new System.Windows.Forms.Button();
+            this.btnXoa = new System.Windows.Forms.Button();
+            this.btnSua = new System.Windows.Forms.Button();
+            this.btnThem = new System.Windows.Forms.Button();
+            this.grvLH = new System.Windows.Forms.DataGridView();
+            this.errorProviderLH = new System.Windows.Forms.ErrorProvider(this.components);
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grvLH)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProviderLH)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -85,9 +87,9 @@ namespace BTL_QLDIEM
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(388, 79);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(57, 17);
+            this.label4.Size = new System.Drawing.Size(64, 17);
             this.label4.TabIndex = 3;
-            this.label4.Text = "Tên NH";
+            this.label4.Text = "Năm học";
             // 
             // label5
             // 
@@ -123,7 +125,7 @@ namespace BTL_QLDIEM
             // 
             // txtSiso
             // 
-            this.txtSiso.Location = new System.Drawing.Point(452, 136);
+            this.txtSiso.Location = new System.Drawing.Point(467, 91);
             this.txtSiso.Name = "txtSiso";
             this.txtSiso.Size = new System.Drawing.Size(121, 22);
             this.txtSiso.TabIndex = 8;
@@ -139,23 +141,18 @@ namespace BTL_QLDIEM
             // cbMaGV
             // 
             this.cbMaGV.FormattingEnabled = true;
-            this.cbMaGV.Location = new System.Drawing.Point(452, 195);
+            this.cbMaGV.Location = new System.Drawing.Point(467, 147);
             this.cbMaGV.Name = "cbMaGV";
             this.cbMaGV.Size = new System.Drawing.Size(121, 24);
             this.cbMaGV.TabIndex = 11;
             // 
-            // txtNamhoc
-            // 
-            this.txtNamhoc.Location = new System.Drawing.Point(452, 79);
-            this.txtNamhoc.Name = "txtNamhoc";
-            this.txtNamhoc.Size = new System.Drawing.Size(121, 22);
-            this.txtNamhoc.TabIndex = 12;
-            // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.cbNH);
+            this.groupBox1.Controls.Add(this.cbMaGV);
             this.groupBox1.Controls.Add(this.btnHome);
-            this.groupBox1.Controls.Add(this.btnTimkiem);
             this.groupBox1.Controls.Add(this.btnReset);
+            this.groupBox1.Controls.Add(this.txtSiso);
             this.groupBox1.Controls.Add(this.btnXoa);
             this.groupBox1.Controls.Add(this.btnSua);
             this.groupBox1.Controls.Add(this.btnThem);
@@ -166,42 +163,23 @@ namespace BTL_QLDIEM
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Thông tin lớp học";
             // 
-            // grvLH
+            // cbNH
             // 
-            this.grvLH.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.grvLH.Location = new System.Drawing.Point(13, 293);
-            this.grvLH.Name = "grvLH";
-            this.grvLH.RowHeadersWidth = 51;
-            this.grvLH.RowTemplate.Height = 24;
-            this.grvLH.Size = new System.Drawing.Size(775, 225);
-            this.grvLH.TabIndex = 14;
+            this.cbNH.FormattingEnabled = true;
+            this.cbNH.Location = new System.Drawing.Point(467, 32);
+            this.cbNH.Name = "cbNH";
+            this.cbNH.Size = new System.Drawing.Size(121, 24);
+            this.cbNH.TabIndex = 15;
             // 
-            // btnThem
+            // btnHome
             // 
-            this.btnThem.Location = new System.Drawing.Point(35, 201);
-            this.btnThem.Name = "btnThem";
-            this.btnThem.Size = new System.Drawing.Size(96, 34);
-            this.btnThem.TabIndex = 0;
-            this.btnThem.Text = "Thêm";
-            this.btnThem.UseVisualStyleBackColor = true;
-            // 
-            // btnSua
-            // 
-            this.btnSua.Location = new System.Drawing.Point(155, 201);
-            this.btnSua.Name = "btnSua";
-            this.btnSua.Size = new System.Drawing.Size(96, 34);
-            this.btnSua.TabIndex = 1;
-            this.btnSua.Text = "Sửa";
-            this.btnSua.UseVisualStyleBackColor = true;
-            // 
-            // btnXoa
-            // 
-            this.btnXoa.Location = new System.Drawing.Point(278, 201);
-            this.btnXoa.Name = "btnXoa";
-            this.btnXoa.Size = new System.Drawing.Size(96, 34);
-            this.btnXoa.TabIndex = 2;
-            this.btnXoa.Text = "Xoá";
-            this.btnXoa.UseVisualStyleBackColor = true;
+            this.btnHome.Location = new System.Drawing.Point(514, 201);
+            this.btnHome.Name = "btnHome";
+            this.btnHome.Size = new System.Drawing.Size(96, 34);
+            this.btnHome.TabIndex = 5;
+            this.btnHome.Text = "Home";
+            this.btnHome.UseVisualStyleBackColor = true;
+            this.btnHome.Click += new System.EventHandler(this.btnHome_Click);
             // 
             // btnReset
             // 
@@ -211,24 +189,53 @@ namespace BTL_QLDIEM
             this.btnReset.TabIndex = 3;
             this.btnReset.Text = "Đặt lại";
             this.btnReset.UseVisualStyleBackColor = true;
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
-            // btnTimkiem
+            // btnXoa
             // 
-            this.btnTimkiem.Location = new System.Drawing.Point(504, 201);
-            this.btnTimkiem.Name = "btnTimkiem";
-            this.btnTimkiem.Size = new System.Drawing.Size(96, 34);
-            this.btnTimkiem.TabIndex = 4;
-            this.btnTimkiem.Text = "Tìm kiếm";
-            this.btnTimkiem.UseVisualStyleBackColor = true;
+            this.btnXoa.Location = new System.Drawing.Point(278, 201);
+            this.btnXoa.Name = "btnXoa";
+            this.btnXoa.Size = new System.Drawing.Size(96, 34);
+            this.btnXoa.TabIndex = 2;
+            this.btnXoa.Text = "Xoá";
+            this.btnXoa.UseVisualStyleBackColor = true;
+            this.btnXoa.Click += new System.EventHandler(this.btnXoa_Click);
             // 
-            // btnHome
+            // btnSua
             // 
-            this.btnHome.Location = new System.Drawing.Point(619, 201);
-            this.btnHome.Name = "btnHome";
-            this.btnHome.Size = new System.Drawing.Size(96, 34);
-            this.btnHome.TabIndex = 5;
-            this.btnHome.Text = "Home";
-            this.btnHome.UseVisualStyleBackColor = true;
+            this.btnSua.Location = new System.Drawing.Point(155, 201);
+            this.btnSua.Name = "btnSua";
+            this.btnSua.Size = new System.Drawing.Size(96, 34);
+            this.btnSua.TabIndex = 1;
+            this.btnSua.Text = "Sửa";
+            this.btnSua.UseVisualStyleBackColor = true;
+            this.btnSua.Click += new System.EventHandler(this.btnSua_Click);
+            // 
+            // btnThem
+            // 
+            this.btnThem.Location = new System.Drawing.Point(35, 201);
+            this.btnThem.Name = "btnThem";
+            this.btnThem.Size = new System.Drawing.Size(96, 34);
+            this.btnThem.TabIndex = 0;
+            this.btnThem.Text = "Thêm";
+            this.btnThem.UseVisualStyleBackColor = true;
+            this.btnThem.Click += new System.EventHandler(this.btnThem_Click);
+            // 
+            // grvLH
+            // 
+            this.grvLH.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.grvLH.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.grvLH.Location = new System.Drawing.Point(13, 293);
+            this.grvLH.Name = "grvLH";
+            this.grvLH.RowHeadersWidth = 51;
+            this.grvLH.RowTemplate.Height = 24;
+            this.grvLH.Size = new System.Drawing.Size(775, 225);
+            this.grvLH.TabIndex = 14;
+            this.grvLH.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grvLH_CellContentClick);
+            // 
+            // errorProviderLH
+            // 
+            this.errorProviderLH.ContainerControl = this;
             // 
             // FrLopHoc
             // 
@@ -236,10 +243,7 @@ namespace BTL_QLDIEM
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(802, 520);
             this.Controls.Add(this.grvLH);
-            this.Controls.Add(this.txtNamhoc);
-            this.Controls.Add(this.cbMaGV);
             this.Controls.Add(this.cbMaKL);
-            this.Controls.Add(this.txtSiso);
             this.Controls.Add(this.txtTen);
             this.Controls.Add(this.txtMa);
             this.Controls.Add(this.label6);
@@ -253,7 +257,9 @@ namespace BTL_QLDIEM
             this.Text = "FrLopHoc";
             this.Load += new System.EventHandler(this.FrLopHoc_Load);
             this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grvLH)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProviderLH)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -272,14 +278,14 @@ namespace BTL_QLDIEM
         private System.Windows.Forms.TextBox txtSiso;
         private System.Windows.Forms.ComboBox cbMaKL;
         private System.Windows.Forms.ComboBox cbMaGV;
-        private System.Windows.Forms.TextBox txtNamhoc;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.DataGridView grvLH;
         private System.Windows.Forms.Button btnHome;
-        private System.Windows.Forms.Button btnTimkiem;
         private System.Windows.Forms.Button btnReset;
         private System.Windows.Forms.Button btnXoa;
         private System.Windows.Forms.Button btnSua;
         private System.Windows.Forms.Button btnThem;
+        private System.Windows.Forms.ComboBox cbNH;
+        private System.Windows.Forms.ErrorProvider errorProviderLH;
     }
 }
