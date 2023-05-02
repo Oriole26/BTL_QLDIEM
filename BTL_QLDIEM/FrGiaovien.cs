@@ -181,7 +181,7 @@ namespace BTL_QLDIEM
         // Trở về trang chủ
         private void btnThoat_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Bạn có muốn thoát không? ", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show("Bạn có muốn quay lại trang chủ không? ", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 this.Hide();
                 MainForm trangchu = new MainForm();

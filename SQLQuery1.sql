@@ -581,3 +581,67 @@ BEGIN
 	SELECT *
 	FROM tblHocKy
 END
+
+--Lấy điểm theo môn, năm học, học kỳ
+GO
+	CREATE PROC select_diem_NHHK
+	@maNH VARCHAR(6),
+	@maHK VARCHAR(3),
+	@maMH VARCHAR(20),
+	@maHS VARCHAR(10)
+	AS
+	BEGIN
+		SELECT *
+		FROM tblDiem
+		WHERE sMaHS = @maHS AND sMaNamHoc = @maNH AND sMaHocKy = @maHK AND sMaMH = @maMH
+	END
+GO
+
+--Xoá điểm
+GO
+	CREATE PROC deleteDiem
+	@maNH VARCHAR(6),
+	@maHK VARCHAR(3),
+	@maMH VARCHAR(20),
+	@maHS VARCHAR(10)
+	AS
+	BEGIN
+		DELETE
+		FROM tblDiem
+		WHERE sMaHS = @maHS AND sMaNamHoc = @maNH AND sMaHocKy = @maHK AND sMaMH = @maMH
+	END
+GO
+SELECT * FROM tblDiem
+
+--Sửa điểm
+GO
+	CREATE PROC editDiem
+	@maNH VARCHAR(6),
+	@maHK VARCHAR(3),
+	@maMH VARCHAR(20),
+	@maHS VARCHAR(10),
+	@diemM FLOAT,
+	@diem15 FLOAT,
+	@diem45 FLOAT,
+	@diemHK FLOAT
+	AS
+	BEGIN
+		UPDATE tblDiem
+		SET fDiemMieng = @diemM, fDiem15P = @diem15, fDiem45P = @diem15, fDiemHocKy = @diemHK
+		WHERE sMaHS = @maHS AND sMaNamHoc = @maNH AND sMaHocKy = @maHK AND sMaMH = @maMH
+	END
+	
+	SELECT * FROM tblDiem
+GO
+
+
+
+--Ghi chú--
+--sMaHocKy VARCHAR(3),
+--sMaNamHoc VARCHAR(6),
+--sMaMH VARCHAR(20),
+--sMaHS VARCHAR(10),
+--fDiemMieng FLOAT,
+--fDiem15P FLOAT,
+--fDiem45P FLOAT,
+--fDiemHocKy FLOAT,

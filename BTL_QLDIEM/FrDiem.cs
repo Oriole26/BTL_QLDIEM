@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Net;
+using System.Xml;
 
 namespace BTL_QLDIEM
 {
@@ -119,7 +120,7 @@ namespace BTL_QLDIEM
             }
         }
 
-        private void maLH_SelectionChangeCommitted(object sender, EventArgs e)
+        private void maLH_SelectedIndexChanged(object sender, EventArgs e)
         {
             string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
             using (SqlConnection cnn = new SqlConnection(constr))
@@ -131,14 +132,29 @@ namespace BTL_QLDIEM
                     {
                         DataTable tb = new DataTable("tblHS");
                         ad.Fill(tb);
+
                         cbmaHS.DataSource = null;
                         txtTenHS.Text = ""; 
+                        txtTenHS.DataBindings.Clear();
+                        //txtDiemM.Text = "";
+                        //txtDiemM.DataBindings.Clear();
+                        //txtDiem15p.Text = "";
+                        //txtDiem15p.DataBindings.Clear();
+                        //txtDiem45p.Text = "";
+                        //txtDiem45p.DataBindings.Clear();
+                        //txtDiemHK.Text = "";
+                        //txtDiemHK.DataBindings.Clear();
+
                         cbmaHS.DisplayMember = "sMaHS";
                         cbmaHS.ValueMember = "sMaHS";
                         cbmaHS.DataSource = tb;
-                        txtTenHS.DataBindings.Clear();
-                        txtTenHS.DataBindings.Add("Text", cbmaHS.DataSource, "sHoTenHS");
                         grvDiem.DataSource = tb;
+
+                        txtTenHS.DataBindings.Add("Text", cbmaHS.DataSource, "sHoTenHS");
+                        //txtDiemM.DataBindings.Add("Text", grvDiem.DataSource, "fDiemMieng");
+                        //txtDiem15p.DataBindings.Add("Text", grvDiem.DataSource, "fDiem15P");
+                        //txtDiem45p.DataBindings.Add("Text", grvDiem.DataSource, "fDiem45p");
+                        //txtDiemHK.DataBindings.Add("Text", grvDiem.DataSource, "fDiemHocKy");
                     }
                 }
             }
@@ -157,24 +173,51 @@ namespace BTL_QLDIEM
                 cnn.Open();
                 if (cnn.State == ConnectionState.Closed) return;
 
-                using (SqlCommand Cmd = new SqlCommand("tblDiem_Insert", cnn))
+                using (SqlCommand cmd = new SqlCommand("select_diem_NHHK", cnn))
                 {
-                    Cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    Cmd.Parameters.Add(new SqlParameter("@smaLH", cbmaLH.Text));
-                    Cmd.Parameters.Add(new SqlParameter("@smaHS", cbmaHS.Text));
-                    Cmd.Parameters.Add(new SqlParameter("@smaNamHoc", cbNamhoc.SelectedValue));
-                    Cmd.Parameters.Add(new SqlParameter("@smaHocKy", cbHocKi.SelectedValue));
-                    Cmd.Parameters.Add(new SqlParameter("@smaMH", cbmaMH.Text));
-                    Cmd.Parameters.Add(new SqlParameter("@fdiemMieng", float.Parse(txtDiemM.Text)));
-                    Cmd.Parameters.Add(new SqlParameter("@fdiem15P", float.Parse(txtDiem15p.Text)));
-                    Cmd.Parameters.Add(new SqlParameter("@fdiem45P", float.Parse(txtDiem45p.Text)));
-                    Cmd.Parameters.Add(new SqlParameter("@fdiemHocKy", float.Parse(txtDiemHK.Text)));
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new SqlParameter("@maNH", cbNamhoc.SelectedValue));
+                    cmd.Parameters.Add(new SqlParameter("@maHK", cbHocKi.SelectedValue));
+                    cmd.Parameters.Add(new SqlParameter("@maMH", cbmaMH.SelectedValue));
+                    cmd.Parameters.Add(new SqlParameter("@maHS", cbmaHS.Text));
 
+                    using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
+                    {
+                        DataTable tb = new DataTable("tblDiem");
+                        ad.Fill(tb);
+                        if (tb.Rows.Count > 0)
+                        {
+                            MessageBox.Show(txtTenHS.Text + " đã có điểm môn " + cbmaMH.Text + " tại năm học, học kỳ này!", "Thông báo", MessageBoxButtons.OK);
+                        }
+                        else
+                        {
+                            using (SqlCommand Cmd = new SqlCommand("tblDiem_Insert", cnn))
+                            {
+                                Cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                                Cmd.Parameters.Add(new SqlParameter("@smaLH", cbmaLH.Text));
+                                Cmd.Parameters.Add(new SqlParameter("@smaHS", cbmaHS.Text));
+                                Cmd.Parameters.Add(new SqlParameter("@smaNamHoc", cbNamhoc.SelectedValue));
+                                Cmd.Parameters.Add(new SqlParameter("@smaHocKy", cbHocKi.SelectedValue));
+                                Cmd.Parameters.Add(new SqlParameter("@smaMH", cbmaMH.SelectedValue));
+                                if (txtDiemM.Text == "") Cmd.Parameters.Add(new SqlParameter("@fdiemMieng",  DBNull.Value));
+                                else Cmd.Parameters.Add(new SqlParameter("@fdiemMieng",  float.Parse(txtDiemM.Text)));
+                                if (txtDiem15p.Text == "") Cmd.Parameters.Add(new SqlParameter("@fdiem15P", DBNull.Value));
+                                else Cmd.Parameters.Add(new SqlParameter("@fdiem15P", float.Parse(txtDiem15p.Text)));
+                                if (txtDiem45p.Text == "") Cmd.Parameters.Add(new SqlParameter("@fdiem45P", DBNull.Value));
+                                else Cmd.Parameters.Add(new SqlParameter("@fdiem45P", float.Parse(txtDiem45p.Text)));
+                                if (txtDiemHK.Text == "") Cmd.Parameters.Add(new SqlParameter("@fdiemHocKy", DBNull.Value));
+                                else Cmd.Parameters.Add(new SqlParameter("@fdiemHocKy", float.Parse(txtDiemHK.Text)));
 
-                    Cmd.ExecuteNonQuery();
+                                Cmd.ExecuteNonQuery();
 
-                    hienDSDiem();
+                                int tmp = cbmaLH.SelectedIndex;
+                                hienDSDiem();
+                                cbmaLH.SelectedIndex = tmp;
+                            }
+                        }
+                    }
                 }
+                cnn.Close();
             }
         }
 
@@ -186,6 +229,116 @@ namespace BTL_QLDIEM
         private void grvDiem_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
+        }
+
+        private void btnSua_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Bạn chắc chắn muốn sửa chứ?", "Thông báo", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
+                using (SqlConnection cnn = new SqlConnection(constr))
+                {
+                    cnn.Open();
+                    if (cnn.State == ConnectionState.Closed) return;
+
+                    using (SqlCommand cmd = new SqlCommand("editDiem", cnn))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add(new SqlParameter("@maNH", cbNamhoc.SelectedValue));
+                        cmd.Parameters.Add(new SqlParameter("@maHK", cbHocKi.SelectedValue));
+                        cmd.Parameters.Add(new SqlParameter("@maMH", cbmaMH.SelectedValue));
+                        cmd.Parameters.Add(new SqlParameter("@maHS", cbmaHS.Text));
+                        if (txtDiemM.Text == "") cmd.Parameters.Add(new SqlParameter("@diemM", DBNull.Value));
+                        else cmd.Parameters.Add(new SqlParameter("@diemM", float.Parse(txtDiemM.Text)));
+                        if (txtDiem15p.Text == "") cmd.Parameters.Add(new SqlParameter("@diem15", DBNull.Value));
+                        else cmd.Parameters.Add(new SqlParameter("@diem15", float.Parse(txtDiem15p.Text)));
+                        if (txtDiem45p.Text == "") cmd.Parameters.Add(new SqlParameter("@diem45", DBNull.Value));
+                        else cmd.Parameters.Add(new SqlParameter("@diem45", float.Parse(txtDiem45p.Text)));
+                        if (txtDiemHK.Text == "") cmd.Parameters.Add(new SqlParameter("@diemHK", DBNull.Value));
+                        else cmd.Parameters.Add(new SqlParameter("@diemHK", float.Parse(txtDiemHK.Text)));
+
+                        cmd.ExecuteNonQuery();
+
+                        int tmp = cbmaLH.SelectedIndex;
+                        hienDSDiem();
+                        cbmaLH.SelectedIndex = 0;
+                        cbmaLH.SelectedIndex = tmp;
+                    }
+
+                    cnn.Close();
+                }
+            }
+
+        }
+
+        private void btnXoa_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Bạn chắc chắn chứ?", "Thông báo", MessageBoxButtons.YesNo) == DialogResult.Yes){
+                string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
+                using (SqlConnection cnn = new SqlConnection(constr))
+                {
+                    cnn.Open();
+                    if (cnn.State == ConnectionState.Closed) return;
+
+                    using (SqlCommand cmd = new SqlCommand("deleteDiem", cnn))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add(new SqlParameter("@maNH", cbNamhoc.SelectedValue));
+                        cmd.Parameters.Add(new SqlParameter("@maHK", cbHocKi.SelectedValue));
+                        cmd.Parameters.Add(new SqlParameter("@maMH", cbmaMH.SelectedValue));
+                        cmd.Parameters.Add(new SqlParameter("@maHS", cbmaHS.Text));
+
+                        cmd.ExecuteNonQuery();
+
+                        int tmp = cbmaLH.SelectedIndex;
+                        hienDSDiem();
+                        cbmaLH.SelectedIndex = tmp;
+                    }
+
+                    cnn.Close();
+                }
+            }
+
+        }
+
+
+        private void btnBack_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Bạn có muốn quay lại trang chủ không? ", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                this.Hide();
+                MainForm trangchu = new MainForm();
+                trangchu.ShowDialog();
+                this.Close();
+            }
+        }
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            txtDiemM.Text = "";
+            txtDiem15p.Text = "";
+            txtDiem45p.Text = "";
+            txtDiemHK.Text = "";
+        }
+
+        private void txtDiemM_TextChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void txtDiem15p_TextChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void txtDiem45p_TextChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void txtDiemHK_TextChanged(object sender, EventArgs e)
+        {
+           
         }
     }
 }
