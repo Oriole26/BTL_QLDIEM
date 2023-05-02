@@ -11,7 +11,7 @@ CREATE TABLE tblLopHoc(sMaLH VARCHAR(10) PRIMARY KEY,
 						CONSTRAINT FK_tblLopHoc_tblNamHoc FOREIGN KEY(sMaNamHoc) REFERENCES tblNamHoc(sMaNamHoc),
 						CONSTRAINT FK_tblLopHoc_tblGV FOREIGN KEY(sMaGV) REFERENCES tblGiaoVien(sMaGV)
 						)
-DROP TABLE tblLopHoc
+
 INSERT INTO tblLopHoc VALUES('LOP611920', '6A1', 'KHOI6', 'NH1920', 35, 'GV06'),
 							('LOP621920', '6A2', 'KHOI6', 'NH1920', 36, 'GV05'),
 							('LOP631920', '6A3', 'KHOI6', 'NH1920', 34, 'GV04'),
@@ -89,8 +89,6 @@ CREATE TABLE tblHocKy
 INSERT INTO tblHocKy VALUES('HK1', N'Học Kỳ 1', 1)
 INSERT INTO tblHocKy VALUES('HK2', N'Học Kỳ 2', 2)
 
-select * from tblHocKy
-
 /*Năm học*/
 CREATE TABLE tblNamHoc
 (
@@ -127,11 +125,7 @@ INSERT INTO tblDiem
 VALUES('LOP611920','HS01','NH1920','HK1','SINHHOC', 7.5, 6.5,8,7.5),
 	  ('LOP621920','HS02','NH1920','HK1','SINHHOC', 7, 8,8,8)
 
-INSERT INTO tblDiem
-VALUES('LOP611920','HS01','NH1920','HK1','AMNHAC', 7.5, 6.5,8,7.5)
-
-Select*from tblDiem
-
+	  Select*from tblDiem
 CREATE TABLE tblKhoiLop (
 							sMaKhoiLop VARCHAR(6) PRIMARY KEY,
 							sTenKhoiLop NVARCHAR(30)
@@ -145,7 +139,6 @@ VALUES
 ('KHOI8',N'Khối 8'),
 ('KHOI9',N'Khối 9')
 
-select * from tblKhoiLop
 CREATE TABLE tblGiaoVien (
 							sMaGV VARCHAR(6) PRIMARY KEY,
 							sTenGV NVARCHAR(30),
@@ -163,14 +156,22 @@ INSERT INTO tblGiaoVien VALUES
 ('GV04', N'Lâm Trung Toàn', N'Nam',N'Hoàng Mai', '0845241566', 'NGUVAN'),
 ('GV05', N'Huỳnh Túc Trí',N'Nam', N'Đại Từ', '0123456789', 'GDCD'),
 ('GV06', N'Lê Thi Minh Nguyệt',N'Nữ', N'Ba Đình', '0123456789', 'MYTHUAT')
-DROP TABLE tblGiaoVien
-CREATE TABLE tblNguoiDung (
-							sMaNguoiDung VARCHAR(6) PRIMARY KEY,
-							sTenNguoiDung NVARCHAR(30), 
-							sTenDangNhap NVARCHAR(30),
-							sMatKhau VARCHAR(64)
 
+CREATE TABLE tblNguoiDung (
+							iIDNguoiDung INT PRIMARY KEY,
+							sTenNguoiDung NVARCHAR(30) UNIQUE, 
+							sMatKhau VARCHAR(100)
 							)
+DROP TABLE tblNguoiDung
+INSERT INTO tblNguoiDung
+VALUES 
+(1,'hoangoanh','oanh26022002'),
+(2,'vananh26','va12345'),			
+(3,'tranquann','quan2112'),			
+(4,'dantien','tien000'),			
+(5,'hoangoanh26','oanh12345')		
+
+select * from tblNguoidung
 
 
 							/*HỌC SINH*/
@@ -541,107 +542,34 @@ BEGIN
 END
 
 
--- Lay ra ma va ten mon hoc
-CREATE PROC tblMonHoc_SelectMa_Ten
-AS
-BEGIN
-	SELECT sMaMH,sTenMH
-	FROM tblMonHoc
-END
-
-
-
--- Lay thong tin HS theo maLH
-alter PROC hs_by_maLH 
+-- Lay ra ma va ten HS theo maLH
+CREATE PROC hs_by_maLH 
 @maLH VARCHAR(10)
 AS
 BEGIN
-	SELECT hs.sMaHS, hs.sHoTenHS, d.sMaNamHoc, d.sMaHocKy, d.sMaMH, d.fDiemMieng, d.fDiem15P, d.fDiem45p, d.fDiemHocKy
-	FROM tblHocSinh AS hs
-	LEFT JOIN tblDiem AS d
-	ON  d.sMaHS =	hs.sMaHS 
-	where hs.sMaLH = @maLH
+	SELECT sMaHS,sHoTenHS
+	FROM tblHocSinh
+	WHERE sMaLH = @maLH
 END
-
-select * from tblDiem
-delete from tblDiem where iSTT = 7
-
---Lay thong tin nam hoc
-CREATE PROC select_all_nh
+GO
+				-- NGƯỜI DÙNG -- 
+CREATE PROCEDURE pr_CheckTK
+@stennd NVARCHAR(100)
 AS
 BEGIN
-	SELECT *
-	FROM tblNamHoc
+    -- Kiểm tra tài khoản trong bảng tblNguoiDung
+    SELECT COUNT(sTenNguoiDung) 
+    FROM tblNguoiDung
+    WHERE tblNguoiDung.sTenNguoiDung = @stennd 
 END
-
---Lay thong tin hoc ky
-CREATE PROC select_all_hk
+GO
+CREATE PROCEDURE pr_CheckMK
+@smatkhau VARCHAR(200)
 AS
 BEGIN
-	SELECT *
-	FROM tblHocKy
+    -- Kiểm tra tài khoản trong bảng tblUsers
+    SELECT COUNT(sMatKhau) 
+    FROM tblNguoiDung
+    WHERE tblNguoiDung.sMatKhau = @smatkhau
 END
-
---Lấy điểm theo môn, năm học, học kỳ
-GO
-	CREATE PROC select_diem_NHHK
-	@maNH VARCHAR(6),
-	@maHK VARCHAR(3),
-	@maMH VARCHAR(20),
-	@maHS VARCHAR(10)
-	AS
-	BEGIN
-		SELECT *
-		FROM tblDiem
-		WHERE sMaHS = @maHS AND sMaNamHoc = @maNH AND sMaHocKy = @maHK AND sMaMH = @maMH
-	END
-GO
-
---Xoá điểm
-GO
-	CREATE PROC deleteDiem
-	@maNH VARCHAR(6),
-	@maHK VARCHAR(3),
-	@maMH VARCHAR(20),
-	@maHS VARCHAR(10)
-	AS
-	BEGIN
-		DELETE
-		FROM tblDiem
-		WHERE sMaHS = @maHS AND sMaNamHoc = @maNH AND sMaHocKy = @maHK AND sMaMH = @maMH
-	END
-GO
-SELECT * FROM tblDiem
-
---Sửa điểm
-GO
-	CREATE PROC editDiem
-	@maNH VARCHAR(6),
-	@maHK VARCHAR(3),
-	@maMH VARCHAR(20),
-	@maHS VARCHAR(10),
-	@diemM FLOAT,
-	@diem15 FLOAT,
-	@diem45 FLOAT,
-	@diemHK FLOAT
-	AS
-	BEGIN
-		UPDATE tblDiem
-		SET fDiemMieng = @diemM, fDiem15P = @diem15, fDiem45P = @diem15, fDiemHocKy = @diemHK
-		WHERE sMaHS = @maHS AND sMaNamHoc = @maNH AND sMaHocKy = @maHK AND sMaMH = @maMH
-	END
-	
-	SELECT * FROM tblDiem
-GO
-
-
-
---Ghi chú--
---sMaHocKy VARCHAR(3),
---sMaNamHoc VARCHAR(6),
---sMaMH VARCHAR(20),
---sMaHS VARCHAR(10),
---fDiemMieng FLOAT,
---fDiem15P FLOAT,
---fDiem45P FLOAT,
---fDiemHocKy FLOAT,
+ 
