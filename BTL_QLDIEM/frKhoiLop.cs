@@ -108,7 +108,7 @@ namespace BTL_QLDIEM
                         using (SqlCommand Cmd = new SqlCommand("tblKhoiLop_Insert", cnn))
                         {
                             Cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            Cmd.Parameters.Add(new SqlParameter("@Mahs", txtMa.Text));
+                            Cmd.Parameters.Add(new SqlParameter("@Makl", txtMa.Text));
                             Cmd.Parameters.Add(new SqlParameter("@Tenhs", txtTen.Text));
                             Cmd.ExecuteNonQuery();
                             hienDSKL();

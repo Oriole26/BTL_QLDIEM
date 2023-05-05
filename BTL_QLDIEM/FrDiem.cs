@@ -273,7 +273,7 @@ namespace BTL_QLDIEM
 
         private void btnXoa_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Bạn chắc chắn chứ?", "Thông báo", MessageBoxButtons.YesNo) == DialogResult.Yes){
+            if (MessageBox.Show("Bạn chắc chắn muốn xoá chứ?", "Thông báo", MessageBoxButtons.YesNo) == DialogResult.Yes){
                 string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
                 using (SqlConnection cnn = new SqlConnection(constr))
                 {
