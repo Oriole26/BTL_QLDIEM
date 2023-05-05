@@ -11,7 +11,7 @@ CREATE TABLE tblLopHoc(sMaLH VARCHAR(10) PRIMARY KEY,
 						CONSTRAINT FK_tblLopHoc_tblNamHoc FOREIGN KEY(sMaNamHoc) REFERENCES tblNamHoc(sMaNamHoc),
 						CONSTRAINT FK_tblLopHoc_tblGV FOREIGN KEY(sMaGV) REFERENCES tblGiaoVien(sMaGV)
 						)
-
+DROP TABLE tblLopHoc
 INSERT INTO tblLopHoc VALUES('LOP611920', '6A1', 'KHOI6', 'NH1920', 35, 'GV06'),
 							('LOP621920', '6A2', 'KHOI6', 'NH1920', 36, 'GV05'),
 							('LOP631920', '6A3', 'KHOI6', 'NH1920', 34, 'GV04'),
@@ -162,7 +162,6 @@ CREATE TABLE tblNguoiDung (
 							sTenNguoiDung NVARCHAR(30) UNIQUE, 
 							sMatKhau VARCHAR(100)
 							)
-DROP TABLE tblNguoiDung
 INSERT INTO tblNguoiDung
 VALUES 
 (1,'hoangoanh','oanh26022002'),
@@ -173,11 +172,8 @@ VALUES
 
 select * from tblNguoidung
 
-
 							/*HỌC SINH*/
 
-
-Select*from tblHocSinh
 GO
 /*Lấy thông tin học sinh*/
 CREATE PROC tblHocsinh_Select 
@@ -362,7 +358,7 @@ BEGIN
    WHERE sMaKhoiLop = @makl
 END
 GO
-/*Xoá môn học*/
+/*Xoá khối lớp*/
 CREATE PROC tblKhoiLop_Xoa
 @makl VARCHAR(10)
 AS
@@ -459,53 +455,127 @@ BEGIN
 	SELECT * FROM tblLopHoc
 END
 GO
-/*Lấy mã môn học*/
-CREATE PROCEDURE tblMonHoc_CheckMa
-@mamh VARCHAR(10)
+/*Lấy mã lớp học*/
+CREATE PROCEDURE tblLopHoc_CheckMa
+@malh VARCHAR(10)
 AS
 	BEGIN	
-			SELECT COUNT(tblMonHoc.sMaMH) FROM tblMonHoc
-		    WHERE tblMonHoc.sMaMH = @mamh
+			SELECT COUNT(tblLopHoc.sMaLH) FROM tblLopHoc
+		    WHERE tblLopHoc.sMaLH = @malh
 	END
 GO
-/*Thêm thông tin môn học*/
-CREATE PROC tblLopHoc_Insert
+/*Thêm thông tin lớp học*/
+ALTER PROC tblLopHoc_Insert
 @Malh VARCHAR(10),
 @Tenlh NVARCHAR(50), 
 @Makl VARCHAR(6),
-@Tennh NVARCHAR(20),
+@Manh NVARCHAR(20),
 @Siso INT,
 @Magv VARCHAR(10)
 AS 
 
 BEGIN
 	INSERT INTO tblLopHoc
-	VALUES(@Malh ,@Tenlh , @Makl ,@Tennh ,@Siso ,@Magv )
+	VALUES(@Malh ,@Tenlh , @Makl ,@Manh ,@Siso ,@Magv )
 END
 GO
 /*Chỉnh sửa thông tin môn học*/
-CREATE PROC tblMonHoc_Update
-@mamh VARCHAR(6),
-@tenmh NVARCHAR(50),
-@Sotiet INT
+CREATE PROC tblLopHoc_Update
+@malh VARCHAR(10),
+@tenlh NVARCHAR(50),
+@Makl VARCHAR(10),
+@Manh VARCHAR(30),
+@Siso INT,
+@Magv VARCHAR(6)
 AS
 BEGIN
-    UPDATE tblMonHoc
+    UPDATE tblLopHoc
 	SET
-	sMaMH = @mamh,
-	sTenMH = @tenmh,
-	iSoTiet = @Sotiet
-   WHERE sMaMH = @mamh
+	sMaLH = @malh,
+	sTenLH = @tenlh,
+	sMaKhoiLop = @Makl,
+	sMaNamHoc = @Manh,
+	iSiSo = @Siso,
+	sMaGV = @Magv
+   WHERE sMaLH = @malh
 END
 GO
 /*Xoá môn học*/
-CREATE PROC tblMonHoc_Xoa
-@mamh VARCHAR(10)
+CREATE PROC tblLopHoc_Xoa
+@malh VARCHAR(10)
 AS
 BEGIN
-   DELETE tblMonHoc where sMaMH = @mamh
+   DELETE tblLopHoc where sMaLH = @malh
 END
 GO
+
+--Proc lấy năm học
+GO
+	ALTER PROC tblNamHoc_Select
+	AS
+	BEGIN
+			SELECT * FROM tblNamHoc
+	END
+GO
+
+-- Lấy ra mã năm học
+GO
+	CREATE PROC tblNamHoc_SelectMa
+	AS
+	BEGIN
+		SELECT sMaNamHoc
+		FROM tblNamHoc
+	END
+GO
+
+-- Proc check ma
+GO
+	ALTER PROC tblNamHoc_CheckMa
+	@smaNH VARCHAR(6)
+	AS
+	BEGIN
+			SELECT COUNT(tblNamHoc.sMaNamHoc) FROM tblNamHoc
+				WHERE tblNamHoc.sMaNamHoc = @smaNH
+	END
+GO
+
+--PROC thêm năm học
+GO
+	ALTER PROC tblNamhoc_Insert
+	@smaNH VARCHAR(6),
+	@sTenNH NVARCHAR(30)
+	AS
+	BEGIN
+		INSERT INTO tblNamHoc
+		VALUES(@smaNH,@sTenNH )
+	END
+GO
+
+-- Proc xoá năm học
+GO
+	ALTER PROC tblNamhoc_Delete
+	@smaNH VARCHAR(6)
+	AS
+	BEGIN
+		DELETE tblNamHoc
+		WHERE sMaNamHoc = @smaNH
+	END
+GO
+
+--Proc update năm học
+GO
+	ALTER PROC tblNamhoc_Update
+	@smaNH VARCHAR(6),
+	@sTenNH NVARCHAR(30)
+	AS
+	BEGIN
+		UPDATE tblNamHoc
+		SET sMaNamHoc = @smaNH,
+			sTenNamHoc = @sTenNH
+		WHERE sMaNamHoc = @smaNH
+	END
+GO
+
 
 				/*ĐIỂM*/
 
@@ -517,7 +587,8 @@ BEGIN
 	SELECT * FROM tblDiem
 END
 GO
---Thêm điểm
+
+-- Thêm thông tin điểm
 CREATE PROC tblDiem_Insert
 @smaLH VARCHAR(10),
 @smaHS VARCHAR(10), 
@@ -542,7 +613,14 @@ BEGIN
 	FROM tblLopHoc
 END
 GO
-
+-- Lấy ra mã và tên môn học
+CREATE PROC tblMonHoc_SelectMa_Ten
+AS
+BEGIN 
+	SELECT sMaMH,sTenMH
+	FROM tblMonHoc
+END
+GO
 --Lấy ra danh sách năm học,học kì
 CREATE  PROC select_diem_NHHK
 	@maNH VARCHAR(6),
@@ -564,8 +642,18 @@ BEGIN
 	FROM tblHocKy
 END
 GO
---Lấy thông tin năm học
 
+--Lấy tất cả tên học kỳ
+GO
+	ALTER PROC tblHocKy_SelectTen
+	AS
+	BEGIN
+		SELECT sTenHocKy
+		FROM tblHocKy
+	END
+GO
+
+--Lấy thông tin năm học
 CREATE PROC select_all_nh
 AS
 BEGIN
@@ -624,7 +712,9 @@ BEGIN
 	WHERE sMaHS = @maHS AND sMaNamHoc = @maNH AND sMaHocKy = @maHK AND sMaMH = @maMH
 END
 GO
-				-- NGƯỜI DÙNG -- 
+
+			-- ĐĂNG NHẬP --
+-- Check đăng nhập
 CREATE PROCEDURE pr_CheckTK
 @stennd NVARCHAR(100)
 AS
@@ -645,4 +735,4 @@ BEGIN
     WHERE tblNguoiDung.sMatKhau = @smatkhau
 END
  
- 
+								
