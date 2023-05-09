@@ -11,7 +11,7 @@ CREATE TABLE tblLopHoc(sMaLH VARCHAR(10) PRIMARY KEY,
 						CONSTRAINT FK_tblLopHoc_tblNamHoc FOREIGN KEY(sMaNamHoc) REFERENCES tblNamHoc(sMaNamHoc),
 						CONSTRAINT FK_tblLopHoc_tblGV FOREIGN KEY(sMaGV) REFERENCES tblGiaoVien(sMaGV)
 						)
-DROP TABLE tblLopHoc
+
 INSERT INTO tblLopHoc VALUES('LOP611920', '6A1', 'KHOI6', 'NH1920', 35, 'GV06'),
 							('LOP621920', '6A2', 'KHOI6', 'NH1920', 36, 'GV05'),
 							('LOP631920', '6A3', 'KHOI6', 'NH1920', 34, 'GV04'),
@@ -75,7 +75,7 @@ VALUES
 		('GDCD',N'GDCD', 40)
 
 GO
-DROP TABLE tblMonHoc
+
 select*from tblMonHoc
 /*Học kì*/
 CREATE TABLE tblHocKy
@@ -111,9 +111,12 @@ CREATE TABLE tblDiem (
 					   fDiem15P FLOAT,
 					   fDiem45P FLOAT,
 					   fDiemHocKy FLOAT,
-						CONSTRAINT FK_tblLopHoc_tblMH FOREIGN KEY(sMaMH) REFERENCES tblMonHoc(sMaMH),
-						CONSTRAINT FK_tblLopHoc_tblHS FOREIGN KEY(sMaHS) REFERENCES tblHocSinh(sMaHS),
-						CONSTRAINT FK_tblLopHoc_tblLH FOREIGN KEY(sMaLH) REFERENCES tblLopHoc(sMaLH),
+						CONSTRAINT FK_tblDiem_tblMH FOREIGN KEY(sMaMH) REFERENCES tblMonHoc(sMaMH),
+						CONSTRAINT FK_tblDiem_tblHS FOREIGN KEY(sMaHS) REFERENCES tblHocSinh(sMaHS),
+						CONSTRAINT FK_tblDiem_tblLH FOREIGN KEY(sMaLH) REFERENCES tblLopHoc(sMaLH),
+						CONSTRAINT FK_tblDiem_tblNH FOREIGN KEY(sMaNamHoc) REFERENCES tblNamHoc(sMaNamHoc),
+						CONSTRAINT FK_tblDiem_tblHK FOREIGN KEY(sMaHocKy) REFERENCES tblHocKy(sMaHocKy),
+
 						CONSTRAINT CK_DIEM_MIENG CHECK(fDiemMieng BETWEEN 0 AND 10),
 						CONSTRAINT CK_DIEM_15P CHECK(fDiem15P BETWEEN 0 AND 10),
 						CONSTRAINT CK_DIEM_45P CHECK(fDiem45P BETWEEN 0 AND 10),
@@ -479,7 +482,7 @@ BEGIN
 	VALUES(@Malh ,@Tenlh , @Makl ,@Manh ,@Siso ,@Magv )
 END
 GO
-/*Chỉnh sửa thông tin môn học*/
+/*Chỉnh sửa thông tin lớp học*/
 CREATE PROC tblLopHoc_Update
 @malh VARCHAR(10),
 @tenlh NVARCHAR(50),
@@ -500,7 +503,7 @@ BEGIN
    WHERE sMaLH = @malh
 END
 GO
-/*Xoá môn học*/
+/*Xoá lớp học*/
 CREATE PROC tblLopHoc_Xoa
 @malh VARCHAR(10)
 AS
@@ -712,7 +715,19 @@ BEGIN
 	WHERE sMaHS = @maHS AND sMaNamHoc = @maNH AND sMaHocKy = @maHK AND sMaMH = @maMH
 END
 GO
+-- In báo cáo danh sách điểm theo lớp
+ALTER PROCEDURE pr_DiemtheoLop
+@malh NVARCHAR(10)
+AS
+BEGIN
+		SELECT a.sMaLH,b.*
+		FROM tblLopHoc a INNER JOIN tblDiem b
+		ON a.sMaLH = b.sMaLH
+		WHERE a.sMaLH = @malh
+		ORDER BY a.sMaLH
+END
 
+GO
 			-- ĐĂNG NHẬP --
 -- Check đăng nhập
 CREATE PROCEDURE pr_CheckTK

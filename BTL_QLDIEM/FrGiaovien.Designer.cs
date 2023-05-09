@@ -188,7 +188,7 @@ namespace BTL_QLDIEM
             this.btnThoat.Name = "btnThoat";
             this.btnThoat.Size = new System.Drawing.Size(136, 62);
             this.btnThoat.TabIndex = 26;
-            this.btnThoat.Text = "Thoát";
+            this.btnThoat.Text = "Home";
             this.btnThoat.UseVisualStyleBackColor = true;
             this.btnThoat.Click += new System.EventHandler(this.btnThoat_Click);
             // 

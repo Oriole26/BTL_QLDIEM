@@ -340,5 +340,37 @@ namespace BTL_QLDIEM
         {
            
         }
+
+        private void btnBC_Click(object sender, EventArgs e)
+        {
+            string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
+            using (SqlConnection cnn = new SqlConnection(constr))
+            {
+                cnn.Open();
+                if (cnn.State == ConnectionState.Closed)
+                    return;
+                using (SqlCommand cmd = new SqlCommand("pr_DiemtheoLop", cnn))
+                {
+
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new SqlParameter("@malh", cbmaLH.Text.Trim()));
+
+                    using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
+                    {
+                        DataTable tbl = new DataTable();
+                        tbl.Clear();
+                        ad.Fill(tbl);
+                        grvDiem.DataSource = tbl;
+                        crpDiem baocao = new crpDiem();
+                        baocao.SetDataSource(tbl);
+                        dtDiem bcDSGV = new dtDiem();
+                        frDSDiem DSGV = new frDSDiem();
+                        DSGV.crystalReportViewer1.ReportSource = baocao;
+                        DSGV.ShowDialog();
+                    }
+                }
+
+            }
+        }
     }
 }

@@ -75,11 +75,42 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="crpDiem.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>crpDiem.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="crpDSGV.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>crpDSGV.rpt</DependentUpon>
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="crpHocSinh.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>crpHocSinh.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="dtDiem.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dtDiem.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="dtHS.cs">
+      <DependentUpon>dtHS.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="dtHS.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dtHS.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="frDSDiem.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frDSDiem.Designer.cs">
+      <DependentUpon>frDSDiem.cs</DependentUpon>
     </Compile>
     <Compile Include="frDSGV.cs">
       <SubType>Form</SubType>
@@ -103,6 +134,12 @@
     </Compile>
     <Compile Include="FrDiem.Designer.cs">
       <DependentUpon>FrDiem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frDSHS.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frDSHS.Designer.cs">
+      <DependentUpon>frDSHS.cs</DependentUpon>
     </Compile>
     <Compile Include="FrGiaovien.cs">
       <SubType>Form</SubType>
@@ -148,9 +185,20 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="crpDiem.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>crpDiem.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="crpDSGV.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>crpDSGV.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="crpHocSinh.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>crpHocSinh.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frDSDiem.resx">
+      <DependentUpon>frDSDiem.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frDSGV.resx">
       <DependentUpon>frDSGV.cs</DependentUpon>
@@ -160,6 +208,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrDiem.resx">
       <DependentUpon>FrDiem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frDSHS.resx">
+      <DependentUpon>frDSHS.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrGiaovien.resx">
       <DependentUpon>FrGiaovien.cs</DependentUpon>
@@ -192,6 +243,17 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="dtDiem.xsc">
+      <DependentUpon>dtDiem.xsd</DependentUpon>
+    </None>
+    <None Include="dtDiem.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dtDiem.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="dtDiem.xss">
+      <DependentUpon>dtDiem.xsd</DependentUpon>
+    </None>
     <None Include="dtGV.xsc">
       <DependentUpon>dtGV.xsd</DependentUpon>
     </None>
@@ -202,6 +264,17 @@
     </None>
     <None Include="dtGV.xss">
       <DependentUpon>dtGV.xsd</DependentUpon>
+    </None>
+    <None Include="dtHS.xsc">
+      <DependentUpon>dtHS.xsd</DependentUpon>
+    </None>
+    <None Include="dtHS.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dtHS.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="dtHS.xss">
+      <DependentUpon>dtHS.xsd</DependentUpon>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

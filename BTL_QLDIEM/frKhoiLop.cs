@@ -109,7 +109,7 @@ namespace BTL_QLDIEM
                         {
                             Cmd.CommandType = System.Data.CommandType.StoredProcedure;
                             Cmd.Parameters.Add(new SqlParameter("@Makl", txtMa.Text));
-                            Cmd.Parameters.Add(new SqlParameter("@Tenhs", txtTen.Text));
+                            Cmd.Parameters.Add(new SqlParameter("@Tenkl", txtTen.Text));
                             Cmd.ExecuteNonQuery();
                             hienDSKL();
                         }

@@ -297,6 +297,37 @@ namespace BTL_QLDIEM
                 }
             }
         }
+
+        private void btnBC_Click(object sender, EventArgs e)
+        {
+            string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
+            using (SqlConnection cnn = new SqlConnection(constr))
+            {
+                cnn.Open();
+                if (cnn.State == ConnectionState.Closed)
+                    return;
+                using (SqlCommand cmd = new SqlCommand("tblHocsinh_Select", cnn))
+                {
+
+
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        DataTable tbl = new DataTable();
+                        tbl.Clear();
+                        tbl.Load(reader);
+                        grvHS.DataSource = tbl;
+                        crpHocSinh baocao = new crpHocSinh();
+                        baocao.SetDataSource(tbl);
+                        dtHS bcDSGV = new dtHS();
+                        frDSHS DSGV = new frDSHS();
+                        DSGV.crystalReportViewer1.ReportSource = baocao;
+                        DSGV.ShowDialog();
+                    }
+                }
+
+            }
+        }
     }
 }
 
