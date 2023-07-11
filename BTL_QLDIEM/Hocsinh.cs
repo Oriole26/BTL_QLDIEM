@@ -17,34 +17,16 @@ namespace BTL_QLDIEM
         {
             InitializeComponent();
         }
-        //Lấy ra danh sách học sinh
-        private DataTable getHS()
-        {
-            string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
-            using (SqlConnection cnn = new SqlConnection(constr))
-            {
-                using (SqlCommand cmd = new SqlCommand("Select *from tblHocSinh", cnn))
-                {
-                    cmd.CommandType = CommandType.Text;
-                    using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
-                    {
-                        DataTable tb = new DataTable("tblHS");
-                   
-                        ad.Fill(tb);
-                        return tb;
-                        
-                    }
-                }
-            }
+        string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
 
-        }
+        
+
         //hiện danh sách học sinh
         private void hienDSHS()
         {
-            string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
             using (SqlConnection cnn = new SqlConnection(constr))
             {
-                using (SqlCommand cmd = new SqlCommand("tblHocsinh_Select", cnn))
+                using (SqlCommand cmd = new SqlCommand("prSelect_HS", cnn))
                 {
                     cmd.CommandType = CommandType.Text;
                     using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
@@ -54,7 +36,19 @@ namespace BTL_QLDIEM
                         ad.Fill(tb);
                         DataView v = new DataView(tb);
                         grvHS.DataSource = v;
-                        cbMaLH.DisplayMember = "sMaLH";
+                        
+                    }
+                }
+                using (SqlCommand cmd = new SqlCommand("prSelect_MaLH", cnn))
+                {
+                    cmd.CommandType = CommandType.Text;
+                    using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
+                    {
+                        DataTable tb = new DataTable("tblLH");
+
+                        ad.Fill(tb);
+
+                        cbMaLH.DisplayMember = "sTenLH";
                         cbMaLH.ValueMember = "sMaLH";
                         cbMaLH.DataSource = tb;
                     }
@@ -80,16 +74,15 @@ namespace BTL_QLDIEM
         private void btnThem_Click(object sender, EventArgs e)
         {
             bool check = true;
-            string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
             using (SqlConnection cnn = new SqlConnection(constr))
             {
                 cnn.Open();
                 if (cnn.State == ConnectionState.Closed)
                     return;
-                using(SqlCommand cmd = new SqlCommand("tblHocSinh_CheckMa", cnn))
+                using(SqlCommand cmd = new SqlCommand("prChecktrung_MaHS", cnn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add(new SqlParameter("@Mahs", txtMa.Text));
+                    cmd.Parameters.Add(new SqlParameter("@smahs", txtMa.Text));
                     int count = (int)cmd.ExecuteScalar();//Sử dụng execteScalar để tr về số lượng bản ghi trùng mã
                     if(count > 0)
                     {
@@ -138,16 +131,16 @@ namespace BTL_QLDIEM
                    
                     if (check)
                     {
-                        using (SqlCommand Cmd = new SqlCommand("tblHocSinh_Insert", cnn))
+                        using (SqlCommand Cmd = new SqlCommand("prInsert_HS", cnn))
                         {
                             Cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            Cmd.Parameters.Add(new SqlParameter("@Mahs", txtMa.Text));
-                            Cmd.Parameters.Add(new SqlParameter("@Tenhs", txtTen.Text));
-                            Cmd.Parameters.Add(new SqlParameter("@Ngaysinh", dtNS.Value.Date));
-                            Cmd.Parameters.Add(new SqlParameter("@Gioitinh", cbGT.Text));
-                            Cmd.Parameters.Add(new SqlParameter("@Diachi", txtDC.Text));
-                            Cmd.Parameters.Add(new SqlParameter("@Dantoc", txtDT.Text));
-                            Cmd.Parameters.Add(new SqlParameter("@Malh", cbMaLH.Text));
+                            Cmd.Parameters.Add(new SqlParameter("@smahs", txtMa.Text));
+                            Cmd.Parameters.Add(new SqlParameter("@stenhs", txtTen.Text));
+                            Cmd.Parameters.Add(new SqlParameter("@dns", dtNS.Value.Date));
+                            Cmd.Parameters.Add(new SqlParameter("@sgioitinh", cbGT.Text));
+                            Cmd.Parameters.Add(new SqlParameter("@sdiachi", txtDC.Text));
+                            Cmd.Parameters.Add(new SqlParameter("@sdantoc", txtDT.Text));
+                            Cmd.Parameters.Add(new SqlParameter("@smalh", cbMaLH.Text));
                             Cmd.ExecuteNonQuery();
                             hienDSHS();
                         }
@@ -166,10 +159,10 @@ namespace BTL_QLDIEM
             row = grvHS.Rows[e.RowIndex];
             txtMa.Text = Convert.ToString(row.Cells["sMaHS"].Value);
             txtTen.Text = Convert.ToString(row.Cells["sHoTenHS"].Value);
-            dtNS.Text = Convert.ToString(row.Cells["dNgaySinh"].Value);
-            cbGT.Text = Convert.ToString(row.Cells["sGioiTinh"].Value);
-            txtDC.Text = Convert.ToString(row.Cells["sDiaChi"].Value);
-            txtDT.Text = Convert.ToString(row.Cells["sDanToc"].Value);
+            dtNS.Text = Convert.ToString(row.Cells["dNgaysinh"].Value);
+            cbGT.Text = Convert.ToString(row.Cells["sGioitinh"].Value);
+            txtDC.Text = Convert.ToString(row.Cells["sDiachi"].Value);
+            txtDT.Text = Convert.ToString(row.Cells["sDantoc"].Value);
             cbMaLH.Text = Convert.ToString(row.Cells["sMaLH"].Value);
         }
         private void btnSua_Click(object sender, EventArgs e)
@@ -184,14 +177,14 @@ namespace BTL_QLDIEM
                     {
 
 
-                        cmd.CommandText = "tblHocSinh_Update";
-                        cmd.Parameters.AddWithValue("@Mahs", maHSsua);
-                        cmd.Parameters.AddWithValue("@Tenhs", txtTen.Text);
-                        cmd.Parameters.AddWithValue("@Ngaysinh", txtTen.Text);
-                        cmd.Parameters.AddWithValue("@Gioitinh", cbGT.Text);
-                        cmd.Parameters.AddWithValue("@Diachi", txtDC.Text);
-                        cmd.Parameters.AddWithValue("@Dantoc", txtDT.Text);
-                        cmd.Parameters.AddWithValue("@Malh", cbMaLH.Text);
+                        cmd.CommandText = "prUpdate_HS";
+                        cmd.Parameters.AddWithValue("@smahs", maHSsua);
+                        cmd.Parameters.AddWithValue("@stenhs", txtTen.Text);
+                        cmd.Parameters.AddWithValue("@dns", txtTen.Text);
+                        cmd.Parameters.AddWithValue("@sgioitinh", cbGT.Text);
+                        cmd.Parameters.AddWithValue("@sdiachi", txtDC.Text);
+                        cmd.Parameters.AddWithValue("@sdantoc", txtDT.Text);
+                        cmd.Parameters.AddWithValue("@smalh", cbMaLH.Text);
 
                         cnn.Open();
                         cmd.ExecuteNonQuery();
@@ -228,10 +221,10 @@ namespace BTL_QLDIEM
                 using (SqlConnection cnn = new SqlConnection(constr))
                 {
 
-                    using (SqlCommand cmd = new SqlCommand("tblHocSinh_Xoa", cnn))
+                    using (SqlCommand cmd = new SqlCommand("prDelete_HS", cnn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@Mahs", MaHS_xoa);
+                        cmd.Parameters.AddWithValue("@smahs", MaHS_xoa);
                         cnn.Open();
                         cmd.ExecuteNonQuery();
                         cnn.Close();
@@ -251,28 +244,6 @@ namespace BTL_QLDIEM
                 this.Close();
             }
         }
-
-        private void btnSearch_Click(object sender, EventArgs e)
-        {
-            string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
-            using (SqlConnection cnn = new SqlConnection(constr))
-            {
-                cnn.Open();
-                if (cnn.State == ConnectionState.Closed)
-                    return;
-                using (SqlCommand cmd = new SqlCommand("tblHocSinh_Search", cnn))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add(new SqlParameter("@Tenhs", txtTimkiem.Text));
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        DataTable dt = new DataTable();
-                        dt.Load(reader);
-                        grvHS.DataSource = dt;
-                    }
-                }
-            }
-        }
         private void txtTimkiem_TextChanged(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(txtTimkiem.Text))
@@ -283,10 +254,11 @@ namespace BTL_QLDIEM
                     cnn.Open();
                     if (cnn.State == System.Data.ConnectionState.Closed)
                         return;
-                    using (SqlCommand sqlCmd = new SqlCommand("tblHocSinh_Search", cnn))
+                    using (SqlCommand sqlCmd = new SqlCommand("prSearch_HS", cnn))
                     {
                         sqlCmd.CommandType = System.Data.CommandType.StoredProcedure;
-                        sqlCmd.Parameters.Add(new SqlParameter("@Tenhs", txtTimkiem.Text));
+                        sqlCmd.Parameters.Add(new SqlParameter("@stenhs", txtTimkiem.Text));
+                        sqlCmd.Parameters.Add(new SqlParameter("@sdiachi", txtTimkiem.Text));
                         using (SqlDataReader reader = sqlCmd.ExecuteReader())
                         {
                             DataTable dt = new DataTable();
@@ -328,6 +300,11 @@ namespace BTL_QLDIEM
 
             }
         }
+
+
+
+
+        
     }
 }
 

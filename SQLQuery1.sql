@@ -6,11 +6,13 @@ CREATE TABLE tblLopHoc(sMaLH VARCHAR(10) PRIMARY KEY,
 						sMaKhoiLop VARCHAR(6),
 						sMaNamHoc VARCHAR(6),
 						iSiSo INT, 
-						sMaGV VARCHAR(6)
+						sMaGV VARCHAR(6),
+						
 						CONSTRAINT FK_tblLopHoc_tblKhoiLop FOREIGN KEY(sMaKhoiLop) REFERENCES tblKhoiLop(sMaKhoiLop),
 						CONSTRAINT FK_tblLopHoc_tblNamHoc FOREIGN KEY(sMaNamHoc) REFERENCES tblNamHoc(sMaNamHoc),
-						CONSTRAINT FK_tblLopHoc_tblGV FOREIGN KEY(sMaGV) REFERENCES tblGiaoVien(sMaGV)
+						CONSTRAINT FK_tblLopHoc_tblGV FOREIGN KEY(sMaGV) REFERENCES tblGiaoVien(sMaGV),
 						)
+
 
 INSERT INTO tblLopHoc VALUES('LOP611920', '6A1', 'KHOI6', 'NH1920', 35, 'GV06'),
 							('LOP621920', '6A2', 'KHOI6', 'NH1920', 36, 'GV05'),
@@ -26,7 +28,7 @@ INSERT INTO tblLopHoc VALUES('LOP611920', '6A1', 'KHOI6', 'NH1920', 35, 'GV06'),
 							('LOP932021', '9A3', 'KHOI9', 'NH2021', 38, 'GV06')
 GO
 select *from tblLopHoc
-
+DROP table tblLopHoc
 
 /*Học sinh*/
 CREATE TABLE tblHocSinh( sMaHS VARCHAR(10) PRIMARY KEY,
@@ -39,8 +41,12 @@ CREATE TABLE tblHocSinh( sMaHS VARCHAR(10) PRIMARY KEY,
 ALTER TABLE tblHocSinh
 ADD sMaLH VARCHAR(10)
 ALTER TABLE tblHocSinh
-ADD CONSTRAINT FK_tblLopHoc_tblHocSinh FOREIGN KEY (sMaLH) REFERENCES tblLopHoc(sMaLH);
+ADD sMaMH VARCHAR(20)
 
+ALTER TABLE tblHocSinh
+ADD CONSTRAINT FK_tblLopHoc_tblHocSinh FOREIGN KEY (sMaLH) REFERENCES tblLopHoc(sMaLH);
+ALTER TABLE tblHocSinh
+DROP CONSTRAINT FK_tblLopHoc_tblHocSinh
 INSERT INTO tblHocSinh
 VALUES
 							('HS01',N'Nguyễn Thị Phương','3/29/2006',N'Nữ',N'Hoàn Kiếm',N'Kinh','LOP922021'),
@@ -50,7 +56,6 @@ VALUES
 							('HS05',N'Ngô Phương Anh','12/26/2008',N'Nữ',N'Tây Hồ', N'Kinh','LOP711920'),
 							('HS06',N'Trần Thuý Quỳnh','10/2/2009',N'Nữ',N'Gia Lâm', N'Kinh','LOP611920')
 
-DELETE FROM tblHocSinh
 INSERT INTO tblHocSinh
 VALUES
 							('HS07',N'Nguyễn Thị P','3/29/2006',N'Nữ',N'Hoàn Kiếm',N'Kinh','LOP922021')
@@ -62,7 +67,10 @@ CREATE TABLE tblMonHoc( sMaMH VARCHAR(20) PRIMARY KEY,
 						sTenMH NVARCHAR(30),
 						iSoTiet INT
 					  )
-					  
+ALTER TABLE tblMonHoc
+ADD sMaGV VARCHAR(6)
+ALTER TABLE tblMonHoc
+ADD CONSTRAINT FK_tblMonHoc_tblGiaoVien FOREIGN KEY(sMaGV) REFERENCES tblGiaoVien(sMaGV)
 INSERT INTO tblMonHoc
 VALUES
 		('SINHHOC',N'Sinh học', 45),
@@ -75,6 +83,7 @@ VALUES
 		('GDCD',N'GDCD', 40)
 
 GO
+DROP TABLE  tblMonHoc
 
 select*from tblMonHoc
 /*Học kì*/
@@ -151,7 +160,9 @@ CREATE TABLE tblGiaoVien (
 							sMaMH VARCHAR(20),
 							CONSTRAINT FK_tblGiaoVien_tblMonHoc FOREIGN KEY(sMaMH) REFERENCES tblMonHoc(sMaMH)
 						)
-						
+						DROP TABLE tblGiaoVien
+ALTER TABLE tblGiaoVien
+ALTER COLUMN sDienThoai VARCHAR(12);					
 INSERT INTO tblGiaoVien VALUES
 ('GV01', N'Nguyễn Hoàng Trung', N'Nam',N'Long Biên', '0975058876', 'SINHHOC'),
 ('GV02', N'Phan Hồng Nhung', N'Nữ',N'Cầu Giấy', '0976630315', 'HOAHOC'),
@@ -251,6 +262,27 @@ AS
 			 WHERE tblHocSinh.sHoTenHS LIKE N'%' + @tenhs + '%'
 	END
 GO
+
+CREATE PROC tblLopHoc_SelectMa
+AS
+BEGIN
+	SELECT sMaLH
+	FROM tblLopHoc
+END
+GO
+
+--Điểm của từng học sinh
+CREATE PROCEDURE pr_SelectDiemTheoHS
+@mahs VARCHAR(6)
+AS
+	BEGIN
+			SELECT diem.*
+			FROM tblDiem diem INNER JOIN tblHocSinh
+			ON diem.sMaHS = tblHocSinh.sMaHS
+			WHERE @mahs = tblHocSinh.sMaHS
+			
+END
+GO
 			/*MÔN HỌC*/
 /*Lấy danh sách môn học*/
 CREATE PROC tblMonhoc_Select 
@@ -277,8 +309,8 @@ BEGIN
 END
 GO
 /*Thêm thông tin môn học*/
-CREATE PROC tblMonhoc_Insert
-@Mamh VARCHAR(6),
+ALTER PROC tblMonhoc_Insert
+@Mamh VARCHAR(20),
 @Tenmh NVARCHAR(50), 
 @Sotiet INT
 AS 
@@ -289,8 +321,8 @@ BEGIN
 END
 GO
 /*Chỉnh sửa thông tin môn học*/
-CREATE PROC tblMonHoc_Update
-@mamh VARCHAR(6),
+ALTER PROC tblMonHoc_Update
+@mamh VARCHAR(20),
 @tenmh NVARCHAR(50),
 @Sotiet INT
 AS
@@ -370,7 +402,7 @@ BEGIN
 END
 GO
 
-		/*GIÁO VIÊN*/
+		--GIÁO VIÊN--
 /*Lấy thông tin giáo viên*/
 CREATE PROC tblGV_Select 
 AS
@@ -396,13 +428,13 @@ BEGIN
 END
 GO
 /*Thêm thông tin giáo viên*/
-CREATE PROCEDURE tblGV_Insert
+ALTER PROCEDURE tblGV_Insert
 				@Magv VARCHAR(6),
 				@Tengv NVARCHAR(50),
 				@Gioitinh NVARCHAR(10),
 				@Diachi NVARCHAR(50),
-				@Sdt VARCHAR(30),
-				@mamh VARCHAR(6)
+				@Sdt VARCHAR(12),
+				@mamh VARCHAR(20)
 AS
 BEGIN
 	INSERT INTO tblGiaoVien
@@ -412,13 +444,13 @@ BEGIN
 END
 GO
 /* Chỉnh sửa thông tin giáo viên*/
-CREATE PROC tblGV_Update
+ALTER PROC tblGV_Update
 @Magv VARCHAR(6),
 @Tengv NVARCHAR(50),
 @Gioitinh NVARCHAR(10),
 @Diachi NVARCHAR(50),
 @Sdt VARCHAR(30),
-@mamh VARCHAR(6)
+@mamh VARCHAR(20)
 
 AS
 BEGIN
@@ -750,4 +782,25 @@ BEGIN
     WHERE tblNguoiDung.sMatKhau = @smatkhau
 END
  
-								
+ 
+ GO
+--Hiển thị số lượng học sinh
+CREATE PROC pr_CountHS 
+@mahs VARCHAR(10)
+AS
+BEGIN
+   SELECT tblLopHoc.sMaHS COUNT (tblLopHoc.sMaHS) AS [soluong]
+   FROM tblLopHoc,tblHocSinh
+   WHERE tblLopHoc.sMaHS =tblHocSinh.sMaHS 
+   and tblLopHoc.sMaHS = @mahs
+   GROUP BY tblLopHoc.sMaHS, tblHocSinh.sHoTenHS
+END
+
+
+  --lấy ra số lượng
+  CREATE PROC pr_SelectSL
+  AS 
+  BEGIN 
+	SELECT sMaLH,iSiSo
+	FROM tblLopHoc
+	END

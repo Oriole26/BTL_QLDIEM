@@ -18,33 +18,14 @@ namespace BTL_QLDIEM
         {
             InitializeComponent();
         }
+        string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
 
-        //Lấy ra danh sách học sinh
-        private DataTable getKL()
-        {
-            string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
-            using (SqlConnection cnn = new SqlConnection(constr))
-            {
-                using (SqlCommand cmd = new SqlCommand("Select *from tblKhoiLop", cnn))
-                {
-                    cmd.CommandType = CommandType.Text;
-                    using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
-                    {
-                        DataTable tb = new DataTable("tblKL");
-
-                        ad.Fill(tb);
-                        return tb;
-
-                    }
-                }
-            }
-        }
+       
         private void hienDSKL()
         {
-            string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
             using (SqlConnection cnn = new SqlConnection(constr))
             {
-                using (SqlCommand cmd = new SqlCommand("tblKhoiLop_Select", cnn))
+                using (SqlCommand cmd = new SqlCommand("prSelect_KL", cnn))
                 {
                     cmd.CommandType = CommandType.Text;
                     using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
@@ -86,16 +67,15 @@ namespace BTL_QLDIEM
 
         private void btnThem_Click(object sender, EventArgs e)
         {
-            string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
             using (SqlConnection cnn = new SqlConnection(constr))
             {
                 cnn.Open();
                 if (cnn.State == ConnectionState.Closed)
                     return;
-                using (SqlCommand cmd = new SqlCommand("tblKhoiLop_CheckMa", cnn))
+                using (SqlCommand cmd = new SqlCommand("prChecktrung_MaKL", cnn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add(new SqlParameter("@Makl", txtMa.Text));
+                    cmd.Parameters.Add(new SqlParameter("@smakl", txtMa.Text));
                     int count = (int)cmd.ExecuteScalar();//Sử dụng execteScalar để tr về số lượng bản ghi trùng mã
                     if (count > 0)
                     {
@@ -105,11 +85,11 @@ namespace BTL_QLDIEM
                     {
 
 
-                        using (SqlCommand Cmd = new SqlCommand("tblKhoiLop_Insert", cnn))
+                        using (SqlCommand Cmd = new SqlCommand("prInsert_KL", cnn))
                         {
                             Cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            Cmd.Parameters.Add(new SqlParameter("@Makl", txtMa.Text));
-                            Cmd.Parameters.Add(new SqlParameter("@Tenkl", txtTen.Text));
+                            Cmd.Parameters.Add(new SqlParameter("@smakl", txtMa.Text));
+                            Cmd.Parameters.Add(new SqlParameter("@stenkl", txtTen.Text));
                             Cmd.ExecuteNonQuery();
                             hienDSKL();
                         }
@@ -134,10 +114,10 @@ namespace BTL_QLDIEM
                     SqlConnection cnn = new SqlConnection();
                     cnn.ConnectionString = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
                     SqlCommand cmd = new SqlCommand();
-                    cmd.CommandText = "tblKhoiLop_Update";
+                    cmd.CommandText = "prUpdate_KL";
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@makl", SqlDbType.VarChar).Value = txtMa.Text;
-                    cmd.Parameters.Add("@tenkl", SqlDbType.NVarChar).Value = txtTen.Text;
+                    cmd.Parameters.Add("@smakl", SqlDbType.VarChar).Value = txtMa.Text;
+                    cmd.Parameters.Add("@stenkl", SqlDbType.NVarChar).Value = txtTen.Text;
 
                     cmd.Connection = cnn;
                     cnn.Open();
@@ -188,9 +168,9 @@ namespace BTL_QLDIEM
                     SqlConnection cnn = new SqlConnection();
                     cnn.ConnectionString = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
                     SqlCommand cmd = new SqlCommand();
-                    cmd.CommandText = "tblKhoiLop_Xoa";
+                    cmd.CommandText = "prDelete_KL";
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@makl", SqlDbType.VarChar).Value = txtMa.Text;
+                    cmd.Parameters.Add("@smakl", SqlDbType.VarChar).Value = txtMa.Text;
                     cmd.Connection = cnn;
                     cnn.Open();
                     hienDSKL();

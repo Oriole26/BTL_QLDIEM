@@ -18,35 +18,16 @@ namespace BTL_QLDIEM
         {
             InitializeComponent();
         }
-        //Lấy ra danh sách môn học
-        private DataTable getMH()
-        {
-            string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
-            using (SqlConnection cnn = new SqlConnection(constr))
-            {
-                using (SqlCommand cmd = new SqlCommand("Select *from tblMonHoc", cnn))
-                {
-                    cmd.CommandType = CommandType.Text;
-                    using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
-                    {
-                        DataTable tb = new DataTable("tblMH");
+        string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
 
-                        ad.Fill(tb);
-                        return tb;
 
-                    }
-                }
-            }
-
-        }
         
         //hiện danh sách môn học
         private void hienDSMH()
         {
-            string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
             using (SqlConnection cnn = new SqlConnection(constr))
             {
-                using (SqlCommand cmd = new SqlCommand("tblMonhoc_Select", cnn))
+                using (SqlCommand cmd = new SqlCommand("prSelect_MH", cnn))
                 {
                     cmd.CommandType = CommandType.Text;
                     using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
@@ -58,22 +39,35 @@ namespace BTL_QLDIEM
                         grvMH.DataSource = v;
                     }
                 }
+                using (SqlCommand cmd = new SqlCommand("prSelect_MaGV", cnn))
+                {
+                    cmd.CommandType = CommandType.Text;
+                    using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
+                    {
+                        DataTable tb = new DataTable("tblMH");
+                        tb.Clear();
+                        ad.Fill(tb);
+                        cbmaGV.DisplayMember = "sMaGV";
+                        cbmaGV.ValueMember = "sMaGV";
+                        cbmaGV.DataSource = tb;
+
+                    }
+                }
             }
         }
         //Thêm môn học
         private void btnThem_Click(object sender, EventArgs e)
         {
             bool check = true;
-            string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
             using (SqlConnection cnn = new SqlConnection(constr))
             {
                 cnn.Open();
                 if (cnn.State == ConnectionState.Closed)
                     return;
-                using (SqlCommand cmd = new SqlCommand("tblMonHoc_CheckMa", cnn))
+                using (SqlCommand cmd = new SqlCommand("prChecktrung_MH", cnn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add(new SqlParameter("@mamh", txtMaMH.Text));
+                    cmd.Parameters.Add(new SqlParameter("@smamh", txtMaMH.Text));
                     int count = (int)cmd.ExecuteScalar();//Sử dụng execteScalar để tr về số lượng bản ghi trùng mã
                     if (count > 0)
                     {
@@ -103,12 +97,13 @@ namespace BTL_QLDIEM
 
                     if(check)
                     {
-                        using (SqlCommand Cmd = new SqlCommand("tblMonHoc_Insert", cnn))
+                        using (SqlCommand Cmd = new SqlCommand("prInsert_MH", cnn))
                         {
                             Cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            Cmd.Parameters.Add(new SqlParameter("@mamh", txtMaMH.Text));
-                            Cmd.Parameters.Add(new SqlParameter("@tenmh", txtTenMH.Text));
-                            Cmd.Parameters.Add(new SqlParameter("@Sotiet", txtSotiet.Text));
+                            Cmd.Parameters.Add(new SqlParameter("@smamh", txtMaMH.Text));
+                            Cmd.Parameters.Add(new SqlParameter("@stenmh", txtTenMH.Text));
+                            Cmd.Parameters.Add(new SqlParameter("@isotiet", txtSotiet.Text));
+                            Cmd.Parameters.Add(new SqlParameter("@smagv", cbmaGV.Text));
 
 
                             Cmd.ExecuteNonQuery();
@@ -130,6 +125,7 @@ namespace BTL_QLDIEM
             grvMH.Columns[0].HeaderText = "Mã môn học";
             grvMH.Columns[1].HeaderText = "Tên môn học";
             grvMH.Columns[2].HeaderText = "Số tiết";
+            grvMH.Columns[3].HeaderText = "Giáo viên dạy";
         }
 
         private void grvMH_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -139,6 +135,7 @@ namespace BTL_QLDIEM
             txtMaMH.Text = Convert.ToString(row.Cells["sMaMH"].Value);
             txtTenMH.Text = Convert.ToString(row.Cells["sTenMH"].Value);
             txtSotiet.Text = Convert.ToString(row.Cells["iSoTiet"].Value);
+            cbmaGV.Text = Convert.ToString(row.Cells["sMaGV"].Value);
         }
 
         private void btnSua_Click(object sender, EventArgs e)
@@ -152,19 +149,20 @@ namespace BTL_QLDIEM
                     using (SqlCommand cmd = cnn.CreateCommand())
                     {
 
-
-                        cmd.CommandText = " tblMonHoc_Update";
-                        cmd.Parameters.AddWithValue("@mamh", maMHsua);
-                        cmd.Parameters.AddWithValue("@tenhs", txtTenMH.Text);
-                        cmd.Parameters.AddWithValue("@Sotiet", txtSotiet.Text);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.CommandText = "prUpdate_MH";
+                        cmd.Parameters.AddWithValue("@smamh", maMHsua);
+                        cmd.Parameters.AddWithValue("@stenmh", txtTenMH.Text);
+                        cmd.Parameters.AddWithValue("@isotiet", txtSotiet.Text);
+                        cmd.Parameters.AddWithValue("@smagv", cbmaGV.Text);
                         cnn.Open();
                         cmd.ExecuteNonQuery();
                         cnn.Close();
                     }
 
                 }
-
             }
+            ResetMH();
             hienDSMH();
         }
         private void ResetMH()
@@ -190,10 +188,10 @@ namespace BTL_QLDIEM
                 using (SqlConnection cnn = new SqlConnection(constr))
                 {
 
-                    using (SqlCommand cmd = new SqlCommand("tblMonHoc_Xoa", cnn))
+                    using (SqlCommand cmd = new SqlCommand("prDelete_MH", cnn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@mamh", MaMH_xoa);
+                        cmd.Parameters.AddWithValue("@smamh", MaMH_xoa);
                         cnn.Open();
                         cmd.ExecuteNonQuery();
                         cnn.Close();

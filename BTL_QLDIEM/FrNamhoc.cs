@@ -17,31 +17,15 @@ namespace BTL_QLDIEM
         {
             InitializeComponent();
         }
-        //Lấy ra danh sách năm học
-        private DataTable getNH()
-        {
-            string str = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
-            using (SqlConnection cnn = new SqlConnection(str))
-            {
-                using (SqlCommand cmd = new SqlCommand("tblNamHoc_Select", cnn))
-                {
-                    cmd.CommandType = CommandType.Text;
-                    using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
-                    {
-                        DataTable tb = new DataTable("tblNH");
-                        ad.Fill(tb);
-                        return tb;
-                    }
-                }
-            }
-        }
+        string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
+
+       
         //Hiện danh sách năm học
         private void hienDSNH()
         {
-            string str = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
-            using (SqlConnection cnn = new SqlConnection(str))
+            using (SqlConnection cnn = new SqlConnection(constr))
             {
-                using (SqlCommand cmd = new SqlCommand("tblNamHoc_Select", cnn))
+                using (SqlCommand cmd = new SqlCommand("prSelect_NH", cnn))
                 {
                     cmd.CommandType = CommandType.Text;
                     using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
@@ -69,17 +53,16 @@ namespace BTL_QLDIEM
         //Thêm năm học 
         private void btnThem_Click(object sender, EventArgs e)
         {
-            string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
             using (SqlConnection cnn = new SqlConnection(constr))
             {
                 bool check = true;
                 cnn.Open();
                 if (cnn.State == ConnectionState.Closed)
                     return;
-                using (SqlCommand cmd = new SqlCommand("tblNamHoc_CheckMa", cnn))
+                using (SqlCommand cmd = new SqlCommand("prChecktrung_MaNH", cnn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add(new SqlParameter("@smaNH", txtmaNH.Text));
+                    cmd.Parameters.Add(new SqlParameter("@smanh", txtmaNH.Text));
                     int count = (int)cmd.ExecuteScalar();
                     if (count > 0)
                     {
@@ -103,11 +86,11 @@ namespace BTL_QLDIEM
                         else errorProviderNH.SetError(txttenNH, "");
                         if (check)
                         {
-                            using (SqlCommand Cmd = new SqlCommand("tblNamHoc_Insert", cnn))
+                            using (SqlCommand Cmd = new SqlCommand("prInsert_NH", cnn))
                             {
                                 Cmd.CommandType = CommandType.StoredProcedure;
-                                Cmd.Parameters.Add(new SqlParameter("@smaNH", txtmaNH.Text));
-                                Cmd.Parameters.Add(new SqlParameter("@stenNH", txttenNH.Text));
+                                Cmd.Parameters.Add(new SqlParameter("@smanh", txtmaNH.Text));
+                                Cmd.Parameters.Add(new SqlParameter("@stennh", txttenNH.Text));
                                 Cmd.ExecuteNonQuery();
                                 hienDSNH();
                             }
@@ -131,15 +114,14 @@ namespace BTL_QLDIEM
             string maNHsua = (string)grvNH.CurrentRow.Cells["sMaNamHoc"].Value;
             if (MessageBox.Show(string.Format("Bạn có muốn năm học có mã : {0} ?", maNHsua), "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
                 using (SqlConnection cnn = new SqlConnection(constr))
                 {
                     using (SqlCommand cmd = cnn.CreateCommand())
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.CommandText = "tblNamHoc_Update";
-                        cmd.Parameters.AddWithValue("@smaNH", maNHsua);
-                        cmd.Parameters.AddWithValue("@stenNH", txttenNH.Text);
+                        cmd.CommandText = "prUpdate_NH";
+                        cmd.Parameters.AddWithValue("@smanh", maNHsua);
+                        cmd.Parameters.AddWithValue("@stennh", txttenNH.Text);
                         cnn.Open();
                         cmd.ExecuteNonQuery();
                         cnn.Close();
@@ -156,14 +138,13 @@ namespace BTL_QLDIEM
             string MaNH_xoa = (string)grvNH.CurrentRow.Cells["sMaNamHoc"].Value;
             if (MessageBox.Show(string.Format("Bạn có muốn xóa năm học có mã : {0} ?", MaNH_xoa), "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
                 using (SqlConnection cnn = new SqlConnection(constr))
                 {
 
-                    using (SqlCommand cmd = new SqlCommand("tblNamhoc_Delete", cnn))
+                    using (SqlCommand cmd = new SqlCommand("prDelete_NH", cnn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@smaNH", MaNH_xoa);
+                        cmd.Parameters.AddWithValue("@smanh", MaNH_xoa);
                         cnn.Open();
                         cmd.ExecuteNonQuery();
                         cnn.Close();

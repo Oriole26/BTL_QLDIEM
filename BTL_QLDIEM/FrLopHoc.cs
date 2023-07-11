@@ -40,7 +40,7 @@ namespace BTL_QLDIEM
                 string str = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
                 using(SqlConnection cnn = new SqlConnection(str))
                 {
-                    using(SqlCommand cmd = new SqlCommand("tblLopHoc_Select",cnn))
+                    using(SqlCommand cmd = new SqlCommand("prSelect_LH",cnn))
                     {
                         cmd.CommandType = CommandType.Text;
                         using(SqlDataAdapter ad = new SqlDataAdapter(cmd))
@@ -56,7 +56,7 @@ namespace BTL_QLDIEM
                         }
                     }
                     //Lấy mã Khối lớp từ bảng khối lớp
-                    using (SqlCommand cmd = new SqlCommand("tblKhoiLop_Ma", cnn))
+                    using (SqlCommand cmd = new SqlCommand("prSelect_MaTenKL", cnn))
                     {
                         cmd.CommandType = CommandType.Text;
                         using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
@@ -66,14 +66,14 @@ namespace BTL_QLDIEM
                             ad.Fill(tb);
 
                      
-                            cbMaKL.DisplayMember = "sMaKhoiLop";
+                            cbMaKL.DisplayMember = "sTenKhoiLop";
                             cbMaKL.ValueMember = "sMaKhoiLop";
                       
                             cbMaKL.DataSource = tb;
                         }
                     }
-                    //Lấy mã GV từ bảng GV
-                    using (SqlCommand cmd = new SqlCommand("tblGiaoVien_Ma", cnn))
+                    //Lấy mã  và tên GV từ bảng GV
+                    using (SqlCommand cmd = new SqlCommand("prGiaovientheoLH", cnn))
                     {
                         cmd.CommandType = CommandType.Text;
                         using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
@@ -82,45 +82,27 @@ namespace BTL_QLDIEM
 
                             ad.Fill(tb);
 
-                            cbMaGV.DisplayMember = "sMaGV";
+                            cbMaGV.DisplayMember = "sTenGV";
                             cbMaGV.ValueMember = "sMaGV";
                             cbMaGV.DataSource = tb;
                        
                         }
 
                     }
-                    //Lấy  năm học
-                    using (SqlCommand cmd = new SqlCommand("tblNamHoc_SelectMa", cnn))
-                    {
-                        cmd.CommandType = CommandType.Text;
-                        using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
-                        {
-                            DataTable tb = new DataTable("tblNH");
-
-                            ad.Fill(tb);
-
-                            cbNH.DisplayMember = "sMaNamHoc";
-                            cbNH.ValueMember = "sMaNamHoc";
-                            cbNH.DataSource = tb;
-
-                        }
-
-                    }
+                    
                 }
             }
-        //Thêm lớp học
         private void FrLopHoc_Load(object sender, EventArgs e)
         {
             hienDSLH();
             grvLH.Columns[0].HeaderText = "Mã lớp";
             grvLH.Columns[1].HeaderText = "Tên lớp";
             grvLH.Columns[2].HeaderText = "Mã  khối lớp";
-            grvLH.Columns[3].HeaderText = "Năm học";
-            grvLH.Columns[4].HeaderText = "Sĩ số";
-            grvLH.Columns[5].HeaderText = "GVCN";
+            grvLH.Columns[3].HeaderText = "Sĩ số";
+            grvLH.Columns[4].HeaderText = "GVCN";
         }
-       
 
+        //Thêm lớp học
         private void btnThem_Click(object sender, EventArgs e)
         {
             string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
@@ -130,10 +112,10 @@ namespace BTL_QLDIEM
                 cnn.Open();
                 if (cnn.State == ConnectionState.Closed)
                     return;
-                using (SqlCommand cmd = new SqlCommand("tblLopHoc_CheckMa", cnn))
+                using (SqlCommand cmd = new SqlCommand("prChecktrung_MaLH", cnn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add(new SqlParameter("@malh", txtMa.Text));
+                    cmd.Parameters.Add(new SqlParameter("@smalh", txtMa.Text));
                     int count = (int)cmd.ExecuteScalar();//Sử dụng execteScalar để tr về số lượng bản ghi trùng mã
                     if (count > 0)
                     {
@@ -163,12 +145,7 @@ namespace BTL_QLDIEM
                         }
                         else errorProviderLH.SetError(cbMaKL, "");
 
-                        if (cbNH.Text.Trim().Length == 0)
-                        {
-                            errorProviderLH.SetError(cbNH, "Vui lòng chọn năm học!");
-                            check = false;
-                        }
-                        else errorProviderLH.SetError(cbNH, "");
+                     
 
                         if (txtSiso.Text.Trim().Length == 0)
                         {
@@ -187,17 +164,14 @@ namespace BTL_QLDIEM
                         
                         if (check)
                         {
-                            using (SqlCommand Cmd = new SqlCommand("tblLopHoc_Insert", cnn))
+                            using (SqlCommand Cmd = new SqlCommand("prInsert_LH", cnn))
                             {
                                 Cmd.CommandType = CommandType.StoredProcedure;
-                                Cmd.Parameters.Add(new SqlParameter("@Malh", txtMa.Text));
-                                Cmd.Parameters.Add(new SqlParameter("@Tenlh", txtTen.Text));
-                                Cmd.Parameters.Add(new SqlParameter("@Makl", cbMaKL.Text));
-                                Cmd.Parameters.Add(new SqlParameter("@Manh", cbNH.Text));
-                            
-                                    Cmd.Parameters.Add(new SqlParameter("@Siso", txtSiso.Text));
-
-                                Cmd.Parameters.Add(new SqlParameter("@Magv", cbMaGV.Text));
+                                Cmd.Parameters.Add(new SqlParameter("@smalh", txtMa.Text));
+                                Cmd.Parameters.Add(new SqlParameter("@stenlh", txtTen.Text));
+                                Cmd.Parameters.Add(new SqlParameter("@smakl", cbMaKL.Text));
+                                Cmd.Parameters.Add(new SqlParameter("@isiso", txtSiso.Text));
+                                Cmd.Parameters.Add(new SqlParameter("@smagv", cbMaGV.Text));
                                 Cmd.ExecuteNonQuery();
                                 hienDSLH();
                             }
@@ -234,7 +208,6 @@ namespace BTL_QLDIEM
             txtMa.Text = Convert.ToString(row.Cells["sMaLH"].Value);
             txtTen.Text = Convert.ToString(row.Cells["sTenLH"].Value);
             cbMaKL.Text = Convert.ToString(row.Cells["sMaKhoiLop"].Value);
-            cbNH.Text = Convert.ToString(row.Cells["sMaNamHoc"].Value);
             txtSiso.Text = Convert.ToString(row.Cells["iSiso"].Value);
             cbMaGV.Text = Convert.ToString(row.Cells["sMaGV"].Value);
 
@@ -250,13 +223,12 @@ namespace BTL_QLDIEM
                     using (SqlCommand cmd = cnn.CreateCommand())
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.CommandText = "tblLopHoc_Update";
-                        cmd.Parameters.AddWithValue("@malh", maLHsua);
-                        cmd.Parameters.AddWithValue("@tenlh", txtTen.Text);
-                        cmd.Parameters.AddWithValue("@Makl ", cbMaKL.Text);
-                        cmd.Parameters.AddWithValue("@Manh", cbNH.Text);
-                        cmd.Parameters.AddWithValue("@Siso", txtSiso.Text);
-                        cmd.Parameters.AddWithValue("@Magv", cbMaGV.Text);
+                        cmd.CommandText = "prUpdate_LH";
+                        cmd.Parameters.AddWithValue("@smalh", maLHsua);
+                        cmd.Parameters.AddWithValue("@stenlh", txtTen.Text);
+                        cmd.Parameters.AddWithValue("@smakl ", cbMaKL.Text);
+                        cmd.Parameters.AddWithValue("@isiso", txtSiso.Text);
+                        cmd.Parameters.AddWithValue("@smagv", cbMaGV.Text);
                         cnn.Open();
                         cmd.ExecuteNonQuery();
                         cnn.Close();
@@ -275,10 +247,10 @@ namespace BTL_QLDIEM
                 using (SqlConnection cnn = new SqlConnection(constr))
                 {
 
-                    using (SqlCommand cmd = new SqlCommand("tblLopHoc_Xoa", cnn))
+                    using (SqlCommand cmd = new SqlCommand("prDelete_LH", cnn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@malh", MaLH_xoa);
+                        cmd.Parameters.AddWithValue("@smalh", MaLH_xoa);
                         cnn.Open();
                         cmd.ExecuteNonQuery();
                         cnn.Close();
@@ -292,7 +264,6 @@ namespace BTL_QLDIEM
             txtMa.Text = "";
             txtTen.Text = "";
             cbMaKL.Text = "";
-            cbNH.Text = " ";
             txtSiso.Text = " ";
             cbMaGV.Text = " ";
         }

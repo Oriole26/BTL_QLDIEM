@@ -147,6 +147,12 @@
     <Compile Include="FrGiaovien.Designer.cs">
       <DependentUpon>FrGiaovien.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrHienHS.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrHienHS.Designer.cs">
+      <DependentUpon>FrHienHS.cs</DependentUpon>
+    </Compile>
     <Compile Include="frKhoiLop.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -214,6 +220,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrGiaovien.resx">
       <DependentUpon>FrGiaovien.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrHienHS.resx">
+      <DependentUpon>FrHienHS.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frKhoiLop.resx">
       <DependentUpon>frKhoiLop.cs</DependentUpon>

@@ -20,34 +20,14 @@ namespace BTL_QLDIEM
         {
             InitializeComponent();
         }
-        //Lấy ra danh sách điểm của học sinh
-        private DataTable getDiem()
-        {
-            string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
-            using (SqlConnection cnn = new SqlConnection(constr))
-            {
-                using (SqlCommand cmd = new SqlCommand("Select * from tblDiem", cnn))
-                {
-                    cmd.CommandType = CommandType.Text;
-                    using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
-                    {
-                        DataTable tb = new DataTable("tbDiem");
+         string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
 
-                        ad.Fill(tb);
-                        return tb;
-
-                    }
-                }
-                
-            }
-        }
         //hiện danh sách điểm của học sinh
         private void hienDSDiem()
         {
-            string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
             using (SqlConnection cnn = new SqlConnection(constr))
             {
-                using (SqlCommand cmd = new SqlCommand("tblDiem_Select", cnn))
+                using (SqlCommand cmd = new SqlCommand("prSelect_Diem", cnn))
                 {
                     cmd.CommandType = CommandType.Text;
                     using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
@@ -60,7 +40,7 @@ namespace BTL_QLDIEM
                         grvDiem.DataSource = v;
                     }
                 }
-                using (SqlCommand cmd = new SqlCommand("tblLopHoc_SelectMa_Ten", cnn))
+                using (SqlCommand cmd = new SqlCommand("prSelect_MaLHTenLH", cnn))
                 {
                     cmd.CommandType = CommandType.Text;
                     using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
@@ -77,7 +57,7 @@ namespace BTL_QLDIEM
                     }
 
                 }
-                using (SqlCommand cmd = new SqlCommand("tblMonHoc_SelectMa_Ten", cnn))
+                using (SqlCommand cmd = new SqlCommand("prSelect_MaMHTenMH", cnn))
                 {
                     cmd.CommandType = CommandType.Text;
                     using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
@@ -92,7 +72,7 @@ namespace BTL_QLDIEM
                     }
                 }
 
-                using (SqlCommand cmd = new SqlCommand("select_all_nh", cnn))
+                using (SqlCommand cmd = new SqlCommand("prSelect_AllNH", cnn))
                 {
                     cmd.CommandType = CommandType.Text;
                     using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
@@ -105,7 +85,7 @@ namespace BTL_QLDIEM
                     }
                 }
 
-                using (SqlCommand cmd = new SqlCommand("select_all_hk", cnn))
+                using (SqlCommand cmd = new SqlCommand("prSelect_AllHK", cnn))
                 {
                     cmd.CommandType = CommandType.Text;
                     using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
@@ -125,7 +105,7 @@ namespace BTL_QLDIEM
             string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
             using (SqlConnection cnn = new SqlConnection(constr))
             {
-                using (SqlCommand cmd = new SqlCommand("hs_by_maLH " + cbmaLH.Text, cnn))
+                using (SqlCommand cmd = new SqlCommand("prSelect_MaTenHS_byLH " + cbmaLH.Text, cnn))
                 {
                     cmd.CommandType = CommandType.Text;
                     using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
@@ -173,13 +153,13 @@ namespace BTL_QLDIEM
                 cnn.Open();
                 if (cnn.State == ConnectionState.Closed) return;
 
-                using (SqlCommand cmd = new SqlCommand("select_diem_NHHK", cnn))
+                using (SqlCommand cmd = new SqlCommand("prSelect_diemNH_HK", cnn))
                 {
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.Add(new SqlParameter("@maNH", cbNamhoc.SelectedValue));
-                    cmd.Parameters.Add(new SqlParameter("@maHK", cbHocKi.SelectedValue));
-                    cmd.Parameters.Add(new SqlParameter("@maMH", cbmaMH.SelectedValue));
-                    cmd.Parameters.Add(new SqlParameter("@maHS", cbmaHS.Text));
+                    cmd.Parameters.Add(new SqlParameter("@smanh", cbNamhoc.SelectedValue));
+                    cmd.Parameters.Add(new SqlParameter("@smahk", cbHocKi.SelectedValue));
+                    cmd.Parameters.Add(new SqlParameter("@smamh", cbmaMH.SelectedValue));
+                    cmd.Parameters.Add(new SqlParameter("@smahs", cbmaHS.Text));
 
                     using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
                     {
@@ -191,14 +171,14 @@ namespace BTL_QLDIEM
                         }
                         else
                         {
-                            using (SqlCommand Cmd = new SqlCommand("tblDiem_Insert", cnn))
+                            using (SqlCommand Cmd = new SqlCommand("prInsert_Diem", cnn))
                             {
                                 Cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                                Cmd.Parameters.Add(new SqlParameter("@smaLH", cbmaLH.Text));
-                                Cmd.Parameters.Add(new SqlParameter("@smaHS", cbmaHS.Text));
-                                Cmd.Parameters.Add(new SqlParameter("@smaNamHoc", cbNamhoc.SelectedValue));
-                                Cmd.Parameters.Add(new SqlParameter("@smaHocKy", cbHocKi.SelectedValue));
-                                Cmd.Parameters.Add(new SqlParameter("@smaMH", cbmaMH.SelectedValue));
+                                Cmd.Parameters.Add(new SqlParameter("@smalh", cbmaLH.Text));
+                                Cmd.Parameters.Add(new SqlParameter("@smahs", cbmaHS.Text));
+                                Cmd.Parameters.Add(new SqlParameter("@smanh", cbNamhoc.SelectedValue));
+                                Cmd.Parameters.Add(new SqlParameter("@smahk", cbHocKi.SelectedValue));
+                                Cmd.Parameters.Add(new SqlParameter("@smamh", cbmaMH.SelectedValue));
                                 if (txtDiemM.Text == "") Cmd.Parameters.Add(new SqlParameter("@fdiemMieng",  DBNull.Value));
                                 else Cmd.Parameters.Add(new SqlParameter("@fdiemMieng",  float.Parse(txtDiemM.Text)));
                                 if (txtDiem15p.Text == "") Cmd.Parameters.Add(new SqlParameter("@fdiem15P", DBNull.Value));
@@ -228,7 +208,17 @@ namespace BTL_QLDIEM
 
         private void grvDiem_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-
+            DataGridViewRow row = new DataGridViewRow();
+            row = grvDiem.Rows[e.RowIndex];
+            cbmaHS.Text = Convert.ToString(row.Cells["sMaHS"].Value);
+            txtTenHS.Text = Convert.ToString(row.Cells["sHotenHS"].Value);
+            cbNamhoc.Text = Convert.ToString(row.Cells["sMaNamHoc"].Value);
+            cbHocKi.Text = Convert.ToString(row.Cells["sMaHocKy"].Value);
+            cbmaMH.Text = Convert.ToString(row.Cells["sMaMH"].Value);
+            txtDiemM.Text = Convert.ToString(row.Cells["fDiemMieng"].Value);
+            txtDiem15p.Text = Convert.ToString(row.Cells["fDiem15P"].Value);
+            txtDiem45p.Text = Convert.ToString(row.Cells["fDiem45P"].Value);
+            txtDiemHK.Text = Convert.ToString(row.Cells["fDiemHocKy"].Value);
         }
 
         private void btnSua_Click(object sender, EventArgs e)
@@ -241,21 +231,22 @@ namespace BTL_QLDIEM
                     cnn.Open();
                     if (cnn.State == ConnectionState.Closed) return;
 
-                    using (SqlCommand cmd = new SqlCommand("editDiem", cnn))
+                    using (SqlCommand cmd = new SqlCommand("prUpdate_Diem", cnn))
                     {
                         cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                        cmd.Parameters.Add(new SqlParameter("@maNH", cbNamhoc.SelectedValue));
-                        cmd.Parameters.Add(new SqlParameter("@maHK", cbHocKi.SelectedValue));
-                        cmd.Parameters.Add(new SqlParameter("@maMH", cbmaMH.SelectedValue));
-                        cmd.Parameters.Add(new SqlParameter("@maHS", cbmaHS.Text));
-                        if (txtDiemM.Text == "") cmd.Parameters.Add(new SqlParameter("@diemM", DBNull.Value));
-                        else cmd.Parameters.Add(new SqlParameter("@diemM", float.Parse(txtDiemM.Text)));
-                        if (txtDiem15p.Text == "") cmd.Parameters.Add(new SqlParameter("@diem15", DBNull.Value));
-                        else cmd.Parameters.Add(new SqlParameter("@diem15", float.Parse(txtDiem15p.Text)));
-                        if (txtDiem45p.Text == "") cmd.Parameters.Add(new SqlParameter("@diem45", DBNull.Value));
-                        else cmd.Parameters.Add(new SqlParameter("@diem45", float.Parse(txtDiem45p.Text)));
-                        if (txtDiemHK.Text == "") cmd.Parameters.Add(new SqlParameter("@diemHK", DBNull.Value));
-                        else cmd.Parameters.Add(new SqlParameter("@diemHK", float.Parse(txtDiemHK.Text)));
+                        cmd.Parameters.Add(new SqlParameter("@smalh", cbmaLH.SelectedValue));
+                        cmd.Parameters.Add(new SqlParameter("@smahs", cbmaHS.Text));
+                        cmd.Parameters.Add(new SqlParameter("@smanh", cbNamhoc.SelectedValue));
+                        cmd.Parameters.Add(new SqlParameter("@smahk", cbHocKi.SelectedValue));
+                        cmd.Parameters.Add(new SqlParameter("@smamh", cbmaMH.SelectedValue));
+                        if (txtDiemM.Text == "") cmd.Parameters.Add(new SqlParameter("@fdiemMieng", DBNull.Value));
+                        else cmd.Parameters.Add(new SqlParameter("@fdiemMieng", float.Parse(txtDiemM.Text)));
+                        if (txtDiem15p.Text == "") cmd.Parameters.Add(new SqlParameter("@fdiem15P", DBNull.Value));
+                        else cmd.Parameters.Add(new SqlParameter("@fdiem15P", float.Parse(txtDiem15p.Text)));
+                        if (txtDiem45p.Text == "") cmd.Parameters.Add(new SqlParameter("@fdiem45P", DBNull.Value));
+                        else cmd.Parameters.Add(new SqlParameter("@fdiem45P", float.Parse(txtDiem45p.Text)));
+                        if (txtDiemHK.Text == "") cmd.Parameters.Add(new SqlParameter("@fdiemHocKy", DBNull.Value));
+                        else cmd.Parameters.Add(new SqlParameter("@fdiemHocKy", float.Parse(txtDiemHK.Text)));
 
                         cmd.ExecuteNonQuery();
 
@@ -280,13 +271,13 @@ namespace BTL_QLDIEM
                     cnn.Open();
                     if (cnn.State == ConnectionState.Closed) return;
 
-                    using (SqlCommand cmd = new SqlCommand("deleteDiem", cnn))
+                    using (SqlCommand cmd = new SqlCommand("prDelete_Diem", cnn))
                     {
                         cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                        cmd.Parameters.Add(new SqlParameter("@maNH", cbNamhoc.SelectedValue));
-                        cmd.Parameters.Add(new SqlParameter("@maHK", cbHocKi.SelectedValue));
-                        cmd.Parameters.Add(new SqlParameter("@maMH", cbmaMH.SelectedValue));
-                        cmd.Parameters.Add(new SqlParameter("@maHS", cbmaHS.Text));
+                        cmd.Parameters.Add(new SqlParameter("@smanh", cbNamhoc.SelectedValue));
+                        cmd.Parameters.Add(new SqlParameter("@smahk", cbHocKi.SelectedValue));
+                        cmd.Parameters.Add(new SqlParameter("@smamh", cbmaMH.SelectedValue));
+                        cmd.Parameters.Add(new SqlParameter("@smahs", cbmaHS.Text));
 
                         cmd.ExecuteNonQuery();
 
@@ -321,21 +312,6 @@ namespace BTL_QLDIEM
             txtDiemHK.Text = "";
         }
 
-        private void txtDiemM_TextChanged(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void txtDiem15p_TextChanged(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void txtDiem45p_TextChanged(object sender, EventArgs e)
-        {
-            
-        }
-
         private void txtDiemHK_TextChanged(object sender, EventArgs e)
         {
            
@@ -349,11 +325,11 @@ namespace BTL_QLDIEM
                 cnn.Open();
                 if (cnn.State == ConnectionState.Closed)
                     return;
-                using (SqlCommand cmd = new SqlCommand("pr_DiemtheoLop", cnn))
+                using (SqlCommand cmd = new SqlCommand("prDiemtheoLop", cnn))
                 {
 
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add(new SqlParameter("@malh", cbmaLH.Text.Trim()));
+                    cmd.Parameters.Add(new SqlParameter("@smalh", cbmaLH.Text.Trim()));
 
                     using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
                     {
@@ -372,5 +348,7 @@ namespace BTL_QLDIEM
 
             }
         }
+
+      
     }
 }

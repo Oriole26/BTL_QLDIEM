@@ -62,6 +62,7 @@ namespace BTL_QLDIEM
             this.txtDiemM = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.btnBC = new System.Windows.Forms.Button();
+            this.label13 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grvDiem)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -349,7 +350,6 @@ namespace BTL_QLDIEM
             this.txtDiem45p.Name = "txtDiem45p";
             this.txtDiem45p.Size = new System.Drawing.Size(124, 27);
             this.txtDiem45p.TabIndex = 5;
-            this.txtDiem45p.TextChanged += new System.EventHandler(this.txtDiem45p_TextChanged);
             // 
             // label11
             // 
@@ -367,7 +367,6 @@ namespace BTL_QLDIEM
             this.txtDiem15p.Name = "txtDiem15p";
             this.txtDiem15p.Size = new System.Drawing.Size(124, 27);
             this.txtDiem15p.TabIndex = 3;
-            this.txtDiem15p.TextChanged += new System.EventHandler(this.txtDiem15p_TextChanged);
             // 
             // label10
             // 
@@ -385,7 +384,6 @@ namespace BTL_QLDIEM
             this.txtDiemM.Name = "txtDiemM";
             this.txtDiemM.Size = new System.Drawing.Size(124, 27);
             this.txtDiemM.TabIndex = 1;
-            this.txtDiemM.TextChanged += new System.EventHandler(this.txtDiemM_TextChanged);
             // 
             // label7
             // 
@@ -407,11 +405,23 @@ namespace BTL_QLDIEM
             this.btnBC.UseVisualStyleBackColor = true;
             this.btnBC.Click += new System.EventHandler(this.btnBC_Click);
             // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(486, 27);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(237, 20);
+            this.label13.TabIndex = 21;
+            this.label13.Text = "QUẢN LÝ ĐIỂM HỌC SINH";
+            // 
             // FrDiem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(1397, 727);
+            this.Controls.Add(this.label13);
             this.Controls.Add(this.btnBC);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.grvDiem);
@@ -432,6 +442,7 @@ namespace BTL_QLDIEM
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -470,5 +481,6 @@ namespace BTL_QLDIEM
         private System.Windows.Forms.TextBox txtTenM;
         private System.Windows.Forms.TextBox txtTenL;
         private System.Windows.Forms.Button btnBC;
+        private System.Windows.Forms.Label label13;
     }
 }

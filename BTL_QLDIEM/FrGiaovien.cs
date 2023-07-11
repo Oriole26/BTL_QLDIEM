@@ -18,35 +18,15 @@ namespace BTL_QLDIEM
         {
             InitializeComponent();
         }
+        string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
 
-        //lấy ra ds GV
-        private DataTable getGV()
-        {
-            string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
-            using (SqlConnection cnn = new SqlConnection(constr))
-            {
-                using (SqlCommand cmd = new SqlCommand("tblGV_Select", cnn))
-                {
-                    cmd.CommandType = CommandType.Text;
-                    using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
-                    {
-                        DataTable tb = new DataTable("tbGV");
-
-                        ad.Fill(tb);
-                        return tb;
-
-                    }
-                }
-            }
-
-        }
+        
         //hiện danh sách giáo viên
         private void hienDSGV()
         {
-            string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
             using (SqlConnection cnn = new SqlConnection(constr))
             {
-                using (SqlCommand cmd = new SqlCommand("tblGV_Select", cnn))
+                using (SqlCommand cmd = new SqlCommand("prSelect_GV", cnn))
                 {
                     cmd.CommandType = CommandType.Text;
                     using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
@@ -60,21 +40,6 @@ namespace BTL_QLDIEM
                     }
                 }
 
-                //Lấy mã MH từ bảng môn học
-                using (SqlCommand cmd = new SqlCommand("tblMonhoc_Ma", cnn))
-                {
-                    cmd.CommandType = CommandType.Text;
-                    using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
-                    {
-                        DataTable tb = new DataTable("tblMH");
-
-                        ad.Fill(tb);
-
-                        cbMaMH.DisplayMember = "sMaMH";//sMaMH là tên trường bạn muốn hiển thị trong combobox
-                        cbMaMH.ValueMember = "sMaMH";
-                        cbMaMH.DataSource = tb;
-                    }
-                }
             }
         }
 
@@ -87,27 +52,40 @@ namespace BTL_QLDIEM
             grvGV.Columns[2].HeaderText = "Giới tính";
             grvGV.Columns[3].HeaderText = "Địa chỉ";
             grvGV.Columns[4].HeaderText = "SDT";
-            grvGV.Columns[5].HeaderText = "Mã MH";
             
 
         }
-      
 
+        private bool phoneValidate(string phone)
+        {
+            if (string.IsNullOrEmpty(phone) || phone.Length > 10) { return false; }
+
+            phone = phone.Trim();
+            if (phone[0] != '0') { return false; }
+
+            for (int i = 0; i < phone.Length; i++)
+            {
+                if (phone[i] - '0' < 0 || phone[i] - '0' > 9) { 
+
+                    return false; }
+            }
+
+            return true;
+        }
         //Thêm giáo viên
         private void btnThem_Click(object sender, EventArgs e)
 
         {
-            string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
             using (SqlConnection cnn = new SqlConnection(constr))
             {
                 bool check = true;
                 cnn.Open();
                 if (cnn.State == ConnectionState.Closed)
                     return;
-                using (SqlCommand cmd = new SqlCommand("tblGiaoVien_CheckMa", cnn))
+                using (SqlCommand cmd = new SqlCommand("prChecktrung_MaGV", cnn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add(new SqlParameter("@Magv", txtMa.Text));
+                    cmd.Parameters.Add(new SqlParameter("@smagv", txtMa.Text));
                     int count = (int)cmd.ExecuteScalar();//Sử dụng execteScalar để tr về số lượng bản ghi trùng mã
                     if (count > 0)
                     {
@@ -151,33 +129,29 @@ namespace BTL_QLDIEM
                         }
                         else errorProviderGV.SetError(txtSDT, "");
 
-
-                        if (cbMaMH.Text.Trim().Length == 0)
-                        {
-                            errorProviderGV.SetError(cbMaMH, "Vui lòng chọn mã môn học !");
-                            check = false;
-                        }
-                        else errorProviderGV.SetError(cbMaMH, "");
-                        if(txtSDT.Text.Length > 10 )
-                        {
-                            errorProviderGV.SetError(txtSDT, "Số điện thoại vượt quá 10 số !");
-                            check = false;
-                        }
-                       
-                        else errorProviderGV.SetError(txtSDT, "");
                         if (check)
                         {
-                            using (SqlCommand Cmd = new SqlCommand("tblGV_Insert", cnn))
+                            using (SqlCommand Cmd = new SqlCommand("prInsert_GV", cnn))
                             {
-                                Cmd.CommandType = CommandType.StoredProcedure;
-                                Cmd.Parameters.Add(new SqlParameter("@Magv", txtMa.Text));
-                                Cmd.Parameters.Add(new SqlParameter("@Tengv", txtTen.Text));
-                                Cmd.Parameters.Add(new SqlParameter("@Gioitinh", cbGT.Text));
-                                Cmd.Parameters.Add(new SqlParameter("@Diachi", txtDC.Text));
-                                Cmd.Parameters.Add(new SqlParameter("@Sdt", txtSDT.Text));
-                                Cmd.Parameters.Add(new SqlParameter("@mamh", cbMaMH.Text));
-                                Cmd.ExecuteNonQuery();
-                                hienDSGV();
+
+                                if (phoneValidate(txtSDT.Text) == true)
+                                {
+                                    Cmd.CommandType = CommandType.StoredProcedure;
+                                    Cmd.Parameters.Add(new SqlParameter("@smagv", txtMa.Text));
+                                    Cmd.Parameters.Add(new SqlParameter("@stengv", txtTen.Text));
+                                    Cmd.Parameters.Add(new SqlParameter("@sgioitinh", cbGT.Text));
+                                    Cmd.Parameters.Add(new SqlParameter("@sdiachi", txtDC.Text));
+                                    Cmd.Parameters.Add(new SqlParameter("@ssdt", txtSDT.Text));
+
+                                    Cmd.ExecuteNonQuery();
+                                    hienDSGV();
+                                    ResetGV();
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Định dạng chưa chính xác!", "Thông báo", MessageBoxButtons.OK);
+
+                                }
                             }
                         }
                        
@@ -212,7 +186,6 @@ namespace BTL_QLDIEM
             cbGT.Text = Convert.ToString(row.Cells["sGioitinh"].Value);
             txtDC.Text = Convert.ToString(row.Cells["sDiaChi"].Value);
             txtSDT.Text = Convert.ToString(row.Cells["sDienThoai"].Value);
-            cbMaMH.Text = Convert.ToString(row.Cells["sMaMH"].Value);
 
 
 
@@ -231,13 +204,12 @@ namespace BTL_QLDIEM
                     using(SqlCommand cmd = cnn.CreateCommand())
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.CommandText = "tblGV_Update";
-                        cmd.Parameters.AddWithValue("@Magv", maGVsua);
-                        cmd.Parameters.AddWithValue("@tenGV", txtTen.Text);
-                        cmd.Parameters.AddWithValue("@Gioitinh", cbGT.Text);
-                        cmd.Parameters.AddWithValue("@Diachi", txtDC.Text);
-                        cmd.Parameters.AddWithValue("@sdt", txtSDT.Text);
-                        cmd.Parameters.AddWithValue("@mamh",cbMaMH.Text);
+                        cmd.CommandText = "prUpdate_GV";
+                        cmd.Parameters.AddWithValue("@smagv", maGVsua);
+                        cmd.Parameters.AddWithValue("@stenGV", txtTen.Text);
+                        cmd.Parameters.AddWithValue("@sgioitinh", cbGT.Text);
+                        cmd.Parameters.AddWithValue("@sdiachi", txtDC.Text);
+                        cmd.Parameters.AddWithValue("@ssdt", txtSDT.Text);
                         cnn.Open();
                         cmd.ExecuteNonQuery();
                         cnn.Close();
@@ -257,10 +229,10 @@ namespace BTL_QLDIEM
                 using (SqlConnection cnn = new SqlConnection(constr))
                 {
 
-                    using (SqlCommand cmd = new SqlCommand("tblGV_Xoa", cnn))
+                    using (SqlCommand cmd = new SqlCommand("prDelete_GV", cnn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@Magv", MaGV_xoa);
+                        cmd.Parameters.AddWithValue("@smagv", MaGV_xoa);
                         cnn.Open();
                         cmd.ExecuteNonQuery();
                         cnn.Close();
@@ -277,7 +249,6 @@ namespace BTL_QLDIEM
             cbGT.Text = "";
             txtDC.Text = " ";
             txtSDT.Text = " ";
-            cbMaMH.Text = " ";
         }
         private void btnReset_Click(object sender, EventArgs e)
         {
@@ -294,10 +265,12 @@ namespace BTL_QLDIEM
                     cnn.Open();
                     if (cnn.State == System.Data.ConnectionState.Closed)
                         return;
-                    using (SqlCommand sqlCmd = new SqlCommand("tblGiaoVien_Search", cnn))
+                    using (SqlCommand sqlCmd = new SqlCommand("prSearch_GV", cnn))
                     {
                         sqlCmd.CommandType = System.Data.CommandType.StoredProcedure;
-                        sqlCmd.Parameters.Add(new SqlParameter("@tengv", txtTK.Text));
+                        sqlCmd.Parameters.Add(new SqlParameter("@stengv", txtTK.Text));
+                        sqlCmd.Parameters.Add(new SqlParameter("@sdiachi", txtTK.Text));
+                        sqlCmd.Parameters.Add(new SqlParameter("@ssdt", txtTK.Text));
                         using (SqlDataReader reader = sqlCmd.ExecuteReader())
                         {
                             DataTable dt = new DataTable();
@@ -318,7 +291,7 @@ namespace BTL_QLDIEM
                 cnn.Open();
                 if (cnn.State == ConnectionState.Closed)
                     return;
-                using (SqlCommand cmd = new SqlCommand("tblGV_Select", cnn))
+                using (SqlCommand cmd = new SqlCommand("prSelect_GV", cnn))
                 {
                     
 
@@ -340,5 +313,8 @@ namespace BTL_QLDIEM
 
             }
         }
+
+    
+
     }
 }
