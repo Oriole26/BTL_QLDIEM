@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using System.Configuration;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+
 namespace BTL_QLDIEM
 {
     public partial class Hocsinh : Form
@@ -17,9 +19,11 @@ namespace BTL_QLDIEM
         {
             InitializeComponent();
         }
-        string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
 
-        
+        private string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
+        private DataTable tbHS = new DataTable("tblHS");
+        private DataTable tbLH = new DataTable("tblLH");
+
 
         //hiện danh sách học sinh
         private void hienDSHS()
@@ -31,10 +35,9 @@ namespace BTL_QLDIEM
                     cmd.CommandType = CommandType.Text;
                     using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
                     {
-                        DataTable tb = new DataTable("tblHS");
-                        tb.Clear();
-                        ad.Fill(tb);
-                        DataView v = new DataView(tb);
+                        tbHS.Clear();
+                        ad.Fill(tbHS);
+                        DataView v = new DataView(tbHS);
                         grvHS.DataSource = v;
                         
                     }
@@ -44,13 +47,13 @@ namespace BTL_QLDIEM
                     cmd.CommandType = CommandType.Text;
                     using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
                     {
-                        DataTable tb = new DataTable("tblLH");
+                        tbLH.Clear();
 
-                        ad.Fill(tb);
+                        ad.Fill(tbLH);
 
                         cbMaLH.DisplayMember = "sTenLH";
                         cbMaLH.ValueMember = "sMaLH";
-                        cbMaLH.DataSource = tb;
+                        cbMaLH.DataSource = tbLH;
                     }
                 }
 
@@ -66,9 +69,6 @@ namespace BTL_QLDIEM
             grvHS.Columns[4].HeaderText = "Địa chỉ";
             grvHS.Columns[5].HeaderText = "Dân tộc";
             grvHS.Columns[6].HeaderText = "Mã LH";
-
-
-
         }
 
         private void btnThem_Click(object sender, EventArgs e)
@@ -140,21 +140,18 @@ namespace BTL_QLDIEM
                             Cmd.Parameters.Add(new SqlParameter("@sgioitinh", cbGT.Text));
                             Cmd.Parameters.Add(new SqlParameter("@sdiachi", txtDC.Text));
                             Cmd.Parameters.Add(new SqlParameter("@sdantoc", txtDT.Text));
-                            Cmd.Parameters.Add(new SqlParameter("@smalh", cbMaLH.Text));
+                            Cmd.Parameters.Add(new SqlParameter("@smalh", cbMaLH.SelectedValue.ToString()));
                             Cmd.ExecuteNonQuery();
                             hienDSHS();
                         }
-                    }
-
-                   
-                    
-                   
+                    } 
                 }
             }
 
         }
         private void grvHS_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex < 0) return;
             DataGridViewRow row = new DataGridViewRow();
             row = grvHS.Rows[e.RowIndex];
             txtMa.Text = Convert.ToString(row.Cells["sMaHS"].Value);
@@ -163,8 +160,40 @@ namespace BTL_QLDIEM
             cbGT.Text = Convert.ToString(row.Cells["sGioitinh"].Value);
             txtDC.Text = Convert.ToString(row.Cells["sDiachi"].Value);
             txtDT.Text = Convert.ToString(row.Cells["sDantoc"].Value);
-            cbMaLH.Text = Convert.ToString(row.Cells["sMaLH"].Value);
         }
+
+        private void grvHS_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            DataGridViewRow row = new DataGridViewRow();
+            row = grvHS.Rows[e.RowIndex];
+            string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
+            using (SqlConnection cnn = new SqlConnection(constr))
+            {
+                cnn.Open();
+                if (cnn.State == ConnectionState.Closed)
+                    return;
+                using (SqlCommand cmd = new SqlCommand("prDiemtheoHS", cnn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new SqlParameter("@smahs", Convert.ToString(row.Cells["sMaHS"].Value)));
+
+                    using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
+                    {
+                        DataTable tbl = new DataTable();
+                        tbl.Clear();
+                        ad.Fill(tbl);
+                        crpDiem baocao = new crpDiem();
+                        baocao.SetDataSource(tbl);
+                        dtDiem bcDSGV = new dtDiem();
+                        frDSDiem DSGV = new frDSDiem();
+                        DSGV.crystalReportViewer1.ReportSource = baocao;
+                        DSGV.ShowDialog();
+                    }
+                }
+            }
+        }
+
         private void btnSua_Click(object sender, EventArgs e)
         {
             string maHSsua = (string)grvHS.CurrentRow.Cells["sMaHS"].Value;
@@ -173,18 +202,16 @@ namespace BTL_QLDIEM
                 string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
                 using (SqlConnection cnn = new SqlConnection(constr))
                 {
-                    using (SqlCommand cmd = cnn.CreateCommand())
+                    using (SqlCommand cmd = new SqlCommand("prUpdate_HS", cnn))
                     {
-
-
-                        cmd.CommandText = "prUpdate_HS";
+                        cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@smahs", maHSsua);
                         cmd.Parameters.AddWithValue("@stenhs", txtTen.Text);
-                        cmd.Parameters.AddWithValue("@dns", txtTen.Text);
+                        cmd.Parameters.AddWithValue("@dns", dtNS.Value);
                         cmd.Parameters.AddWithValue("@sgioitinh", cbGT.Text);
                         cmd.Parameters.AddWithValue("@sdiachi", txtDC.Text);
                         cmd.Parameters.AddWithValue("@sdantoc", txtDT.Text);
-                        cmd.Parameters.AddWithValue("@smalh", cbMaLH.Text);
+                        cmd.Parameters.AddWithValue("@smalh", cbMaLH.SelectedValue.ToString());
 
                         cnn.Open();
                         cmd.ExecuteNonQuery();
@@ -252,7 +279,7 @@ namespace BTL_QLDIEM
                 using (SqlConnection cnn = new SqlConnection(constr))
                 {
                     cnn.Open();
-                    if (cnn.State == System.Data.ConnectionState.Closed)
+                    if (cnn.State == ConnectionState.Closed)
                         return;
                     using (SqlCommand sqlCmd = new SqlCommand("prSearch_HS", cnn))
                     {
@@ -267,6 +294,9 @@ namespace BTL_QLDIEM
                         }
                     }
                 }
+            } else
+            {
+                hienDSHS();
             }
         }
 
@@ -278,11 +308,8 @@ namespace BTL_QLDIEM
                 cnn.Open();
                 if (cnn.State == ConnectionState.Closed)
                     return;
-                using (SqlCommand cmd = new SqlCommand("tblHocsinh_Select", cnn))
+                using (SqlCommand cmd = new SqlCommand("prSelect_HS", cnn))
                 {
-
-
-
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         DataTable tbl = new DataTable();
@@ -301,10 +328,29 @@ namespace BTL_QLDIEM
             }
         }
 
+        private void cbMaLH_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbMaLH.Focused)
+            {
+                using (SqlConnection cnn = new SqlConnection(constr))
+                {
+                    using (SqlCommand cmd = new SqlCommand("prSelectHSByMaLop", cnn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@malh", cbMaLH.SelectedValue.ToString());
+                        using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
+                        {
+                            tbHS.Clear();
+                            ad.Fill(tbHS);
+                            //DataView v = new DataView(tbHS);
 
+                            grvHS.DataSource = tbHS;
+                        }
+                    }
+                }
+            }           
+        }
 
-
-        
     }
 }
 

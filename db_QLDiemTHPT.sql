@@ -137,7 +137,6 @@ INSERT INTO tblDiem VALUES
 					('LOP1011920','HS01','NH1920','HK1','SINHHOC', 7.5, 6.5,8,7.5),
 					('LOP1011920','HS02','NH1920','HK1','SINHHOC', 7, 8,8,8)
 
-DROP TABLE tblDiem
 CREATE TABLE tblNguoiDung (
 							iIDNguoiDung INT PRIMARY KEY,
 							sTenNguoiDung NVARCHAR(30) UNIQUE, 
@@ -160,6 +159,17 @@ CREATE PROC prSelect_HS
 AS
 BEGIN
 	SELECT * FROM tblHocSinh
+END
+GO
+
+-- Lấy ra thông tin học sinh theo lớp học
+CREATE PROC prSelectHSByMaLop
+	@malh VARCHAR(10)
+AS
+BEGIN
+	SELECT * 
+	FROM tblHocSinh
+	WHERE sMaLH = @malh
 END
 GO
 
@@ -238,10 +248,11 @@ END
 GO
 -- Lấy thông tin mã lớp học
 
-ALTER PROC prSelect_MaLH
+CREATE PROC prSelect_MaLH
 AS
 BEGIN
-	
+	SELECT *
+	FROM tblLopHoc
 END
 GO
 
@@ -423,7 +434,7 @@ BEGIN
 END
 GO
 
-/*CREATE PROCEDURE prGiaovientheoLH
+CREATE PROCEDURE prGiaovientheoLH
 @smagv VARCHAR(6)
 AS
 BEGIN
@@ -433,7 +444,15 @@ BEGIN
 		WHERE a.sMaGV = @smagv
 		ORDER BY a.sMaGV
 END
-GO*/
+GO
+
+ALTER PROCEDURE prSelectAllGiaovien
+AS
+BEGIN
+	SELECT *
+	FROM tblGiaoVien
+END
+GO
 
 -- Thêm thông tin giáo viên
 CREATE PROCEDURE prInsert_GV
@@ -773,6 +792,17 @@ BEGIN
 END
 GO
 
+-- In báo cáo danh sách điểm theo học sinh
+CREATE PROCEDURE prDiemtheoHS
+@smahs NVARCHAR(10)
+AS
+BEGIN
+	SELECT *
+	FROM tblDiem
+	WHERE sMaHS = @smahs
+END
+GO
+
 /*
 -- ĐĂNG NHẬP --
 -- Check đăng nhập
@@ -811,12 +841,27 @@ BEGIN
    and tblLopHoc.sMaHS = @mahs
    GROUP BY tblLopHoc.sMaHS, tblHocSinh.sHoTenHS
 END
-
+GO
 
   --lấy ra số lượng
-  CREATE PROC pr_SelectSL
-  AS 
-  BEGIN 
+CREATE PROC pr_SelectSL
+AS 
+BEGIN 
 	SELECT sMaLH,iSiSo
 	FROM tblLopHoc
-	END
+END
+GO
+
+ALTER TABLE tblDiem
+ADD sMaKhoiLop VARCHAR(6),
+CONSTRAINT FK_tblDiem_tblKhoiLop FOREIGN KEY (sMaKhoiLop) REFERENCES tblKhoiLop(sMaKhoiLop)
+
+UPDATE tblDiem
+SET sMaKhoiLop = 'KHOI10'
+
+SELECT * FROM tblDiem
+SELECT * FROM tblKhoiLop
+SELECT * FROM tblLopHoc
+SELECT * FROM tblHocSinh
+
+

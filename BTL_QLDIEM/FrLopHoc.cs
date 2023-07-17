@@ -51,8 +51,6 @@ namespace BTL_QLDIEM
 
                             DataView v = new DataView(tb);
                             grvLH.DataSource = v;
-
-                        
                         }
                     }
                     //Lấy mã Khối lớp từ bảng khối lớp
@@ -72,8 +70,9 @@ namespace BTL_QLDIEM
                             cbMaKL.DataSource = tb;
                         }
                     }
+
                     //Lấy mã  và tên GV từ bảng GV
-                    using (SqlCommand cmd = new SqlCommand("prGiaovientheoLH", cnn))
+                    using (SqlCommand cmd = new SqlCommand("prSelectAllGiaovien", cnn))
                     {
                         cmd.CommandType = CommandType.Text;
                         using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
@@ -85,11 +84,9 @@ namespace BTL_QLDIEM
                             cbMaGV.DisplayMember = "sTenGV";
                             cbMaGV.ValueMember = "sMaGV";
                             cbMaGV.DataSource = tb;
-                       
                         }
-
                     }
-                    
+
                 }
             }
         private void FrLopHoc_Load(object sender, EventArgs e)

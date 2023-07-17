@@ -345,7 +345,6 @@ namespace BTL_QLDIEM
                         DSGV.ShowDialog();
                     }
                 }
-
             }
         }
 
