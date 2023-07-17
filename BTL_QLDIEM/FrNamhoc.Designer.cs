@@ -55,6 +55,7 @@ namespace BTL_QLDIEM
             this.txtmaNH.Name = "txtmaNH";
             this.txtmaNH.Size = new System.Drawing.Size(194, 27);
             this.txtmaNH.TabIndex = 0;
+            this.txtmaNH.Validating += new System.ComponentModel.CancelEventHandler(this.txtmaNH_Validating);
             // 
             // txttenNH
             // 
@@ -63,6 +64,7 @@ namespace BTL_QLDIEM
             this.txttenNH.Name = "txttenNH";
             this.txttenNH.Size = new System.Drawing.Size(194, 27);
             this.txttenNH.TabIndex = 1;
+            this.txttenNH.Validating += new System.ComponentModel.CancelEventHandler(this.txttenNH_Validating);
             // 
             // label1
             // 

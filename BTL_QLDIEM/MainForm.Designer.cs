@@ -44,6 +44,8 @@ namespace BTL_QLDIEM
             this.mnuQLHS = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuQLGV = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuDiem = new System.Windows.Forms.ToolStripMenuItem();
+            this.báoCáoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuBaocaoHS_LH = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -59,7 +61,8 @@ namespace BTL_QLDIEM
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.hệThốngToolStripMenuItem,
             this.danhMụcToolStripMenuItem,
-            this.quảnLýToolStripMenuItem});
+            this.quảnLýToolStripMenuItem,
+            this.báoCáoToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(10, 2, 0, 2);
@@ -80,14 +83,14 @@ namespace BTL_QLDIEM
             // mnuDangnhap
             // 
             this.mnuDangnhap.Name = "mnuDangnhap";
-            this.mnuDangnhap.Size = new System.Drawing.Size(165, 26);
+            this.mnuDangnhap.Size = new System.Drawing.Size(194, 32);
             this.mnuDangnhap.Text = "Đăng nhập";
             this.mnuDangnhap.Click += new System.EventHandler(this.mnuDangnhap_Click);
             // 
             // mnuDangxuat
             // 
             this.mnuDangxuat.Name = "mnuDangxuat";
-            this.mnuDangxuat.Size = new System.Drawing.Size(165, 26);
+            this.mnuDangxuat.Size = new System.Drawing.Size(194, 32);
             this.mnuDangxuat.Text = "Đăng xuất";
             this.mnuDangxuat.Click += new System.EventHandler(this.mnuDangxuat_Click);
             // 
@@ -106,28 +109,28 @@ namespace BTL_QLDIEM
             // mnuQLMH
             // 
             this.mnuQLMH.Name = "mnuQLMH";
-            this.mnuQLMH.Size = new System.Drawing.Size(152, 26);
+            this.mnuQLMH.Size = new System.Drawing.Size(177, 32);
             this.mnuQLMH.Text = "Môn học";
             this.mnuQLMH.Click += new System.EventHandler(this.mnuQLMH_Click);
             // 
             // mnuKL
             // 
             this.mnuKL.Name = "mnuKL";
-            this.mnuKL.Size = new System.Drawing.Size(152, 26);
+            this.mnuKL.Size = new System.Drawing.Size(177, 32);
             this.mnuKL.Text = "Khối lớp";
             this.mnuKL.Click += new System.EventHandler(this.mnuKL_Click);
             // 
             // mnuLophoc
             // 
             this.mnuLophoc.Name = "mnuLophoc";
-            this.mnuLophoc.Size = new System.Drawing.Size(152, 26);
+            this.mnuLophoc.Size = new System.Drawing.Size(177, 32);
             this.mnuLophoc.Text = "Lớp học";
             this.mnuLophoc.Click += new System.EventHandler(this.mnuLophoc_Click);
             // 
             // mnuNamHoc
             // 
             this.mnuNamHoc.Name = "mnuNamHoc";
-            this.mnuNamHoc.Size = new System.Drawing.Size(152, 26);
+            this.mnuNamHoc.Size = new System.Drawing.Size(177, 32);
             this.mnuNamHoc.Text = "Năm học";
             this.mnuNamHoc.Click += new System.EventHandler(this.mnuNamHoc_Click);
             // 
@@ -145,23 +148,39 @@ namespace BTL_QLDIEM
             // mnuQLHS
             // 
             this.mnuQLHS.Name = "mnuQLHS";
-            this.mnuQLHS.Size = new System.Drawing.Size(190, 26);
+            this.mnuQLHS.Size = new System.Drawing.Size(226, 32);
             this.mnuQLHS.Text = "Học sinh";
             this.mnuQLHS.Click += new System.EventHandler(this.mnuQLHS_Click);
             // 
             // mnuQLGV
             // 
             this.mnuQLGV.Name = "mnuQLGV";
-            this.mnuQLGV.Size = new System.Drawing.Size(190, 26);
+            this.mnuQLGV.Size = new System.Drawing.Size(226, 32);
             this.mnuQLGV.Text = "Giáo viên";
             this.mnuQLGV.Click += new System.EventHandler(this.mnuQLGV_Click);
             // 
             // mnuDiem
             // 
             this.mnuDiem.Name = "mnuDiem";
-            this.mnuDiem.Size = new System.Drawing.Size(190, 26);
+            this.mnuDiem.Size = new System.Drawing.Size(226, 32);
             this.mnuDiem.Text = "Điểm môn học";
             this.mnuDiem.Click += new System.EventHandler(this.mnuDiem_Click);
+            // 
+            // báoCáoToolStripMenuItem
+            // 
+            this.báoCáoToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuBaocaoHS_LH});
+            this.báoCáoToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.báoCáoToolStripMenuItem.Name = "báoCáoToolStripMenuItem";
+            this.báoCáoToolStripMenuItem.Size = new System.Drawing.Size(95, 32);
+            this.báoCáoToolStripMenuItem.Text = "Báo cáo";
+            // 
+            // mnuBaocaoHS_LH
+            // 
+            this.mnuBaocaoHS_LH.Name = "mnuBaocaoHS_LH";
+            this.mnuBaocaoHS_LH.Size = new System.Drawing.Size(289, 32);
+            this.mnuBaocaoHS_LH.Text = "Học sinh theo lớp học";
+            this.mnuBaocaoHS_LH.Click += new System.EventHandler(this.mnuBaocaoHS_LH_Click);
             // 
             // MainForm
             // 
@@ -174,7 +193,7 @@ namespace BTL_QLDIEM
             this.Controls.Add(this.menuStrip1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "MainForm";
             this.Text = "MainForm";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
@@ -201,5 +220,7 @@ namespace BTL_QLDIEM
         private System.Windows.Forms.ToolStripMenuItem mnuQLGV;
         private System.Windows.Forms.ToolStripMenuItem mnuDiem;
         private System.Windows.Forms.ToolStripMenuItem mnuNamHoc;
+        private System.Windows.Forms.ToolStripMenuItem báoCáoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mnuBaocaoHS_LH;
     }
 }

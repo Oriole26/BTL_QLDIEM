@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using System.Configuration;
+using System.Text.RegularExpressions;
 namespace BTL_QLDIEM
 {
     public partial class FrNamhoc : Form
@@ -175,6 +176,30 @@ namespace BTL_QLDIEM
                 trangchu.ShowDialog();
                 this.Close();
             }
+        }
+
+        private void txtmaNH_Validating(object sender, CancelEventArgs e)
+        {
+            string sRegex = @"^NH\d{4}$";
+            Regex reg = new Regex(sRegex);
+            bool isValid = reg.IsMatch(txtmaNH.Text);
+            if (!isValid)
+            {
+                errorProviderNH.SetError(txtmaNH, "Bạn phải nhập theo thứ tự NH sau đó đến 4 chữ số(VD: NH2021 ! ");
+            }
+            else errorProviderNH.SetError(txtmaNH, "");
+        }
+
+        private void txttenNH_Validating(object sender, CancelEventArgs e)
+        {
+            string sRegex = @"^20\d{2}-20\d{2}$";
+            Regex reg = new Regex(sRegex);
+            bool isValid = reg.IsMatch(txttenNH.Text);
+            if (!isValid)
+            {
+                errorProviderNH.SetError(txttenNH, "Bạn phải nhập hai năm phù hợp (VD: 2020-2021)!");
+            }
+            else errorProviderNH.SetError(txttenNH, "");
         }
     }
 }

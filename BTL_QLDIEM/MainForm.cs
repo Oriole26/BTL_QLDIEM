@@ -104,6 +104,13 @@ namespace BTL_QLDIEM
             dangnhap.Show();
             this.Hide();
         }
+
+        private void mnuBaocaoHS_LH_Click(object sender, EventArgs e)
+        {
+            crvHS_LH DSHS = new crvHS_LH();
+            DSHS.Show();
+            this.Hide();
+        }
     }
     
 }

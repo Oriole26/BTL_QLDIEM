@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using System.Configuration;
-
+using System.Text.RegularExpressions;
 namespace BTL_QLDIEM
 {
     public partial class FrGiaovien : Form
@@ -56,7 +56,7 @@ namespace BTL_QLDIEM
 
         }
 
-        private bool phoneValidate(string phone)
+       /* private bool phoneValidate(string phone)
         {
             if (string.IsNullOrEmpty(phone) || phone.Length > 10) { return false; }
 
@@ -71,7 +71,7 @@ namespace BTL_QLDIEM
             }
 
             return true;
-        }
+        }*/
         //Thêm giáo viên
         private void btnThem_Click(object sender, EventArgs e)
 
@@ -108,6 +108,15 @@ namespace BTL_QLDIEM
                         }
                         else errorProviderGV.SetError(txtTen, "");
 
+                        if (!Regex.Match(txtTen.Text, "/^[a-zA-Z0-9 ]*$/").Success)
+                        {
+                            errorProviderGV.SetError(txtTen, "Tên không chứa số và kí tự đặc biệt");
+                            txtTen.Focus();
+                            check = false;
+
+                        }
+                        else errorProviderGV.SetError(txtTen, "");
+
                         if (cbGT.Text.Trim().Length == 0)
                         {
                             errorProviderGV.SetError(cbGT, "Vui lòng chọn giới tính !");
@@ -128,14 +137,20 @@ namespace BTL_QLDIEM
                             check = false;
                         }
                         else errorProviderGV.SetError(txtSDT, "");
-
+                        string phonePattern = "/^(0?)(3[2-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/";
+                        bool isPhoneValid = Regex.IsMatch(txtSDT.Text, phonePattern);
+                        if (!isPhoneValid)
+                        {
+                            // phone number was incorrect
+                            errorProviderGV.SetError(txtSDT, "Vui lòng nhập đúng định dạng !");
+                            txtSDT.Focus();
+                           
+                        }
+                        else errorProviderGV.SetError(txtSDT, "");
                         if (check)
                         {
                             using (SqlCommand Cmd = new SqlCommand("prInsert_GV", cnn))
                             {
-
-                                if (phoneValidate(txtSDT.Text) == true)
-                                {
                                     Cmd.CommandType = CommandType.StoredProcedure;
                                     Cmd.Parameters.Add(new SqlParameter("@smagv", txtMa.Text));
                                     Cmd.Parameters.Add(new SqlParameter("@stengv", txtTen.Text));
@@ -146,12 +161,8 @@ namespace BTL_QLDIEM
                                     Cmd.ExecuteNonQuery();
                                     hienDSGV();
                                     ResetGV();
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Định dạng chưa chính xác!", "Thông báo", MessageBoxButtons.OK);
-
-                                }
+                               
+                               
                             }
                         }
                        
@@ -314,7 +325,57 @@ namespace BTL_QLDIEM
             }
         }
 
-    
+  
 
+        
+
+        private void txtMa_Validating(object sender, CancelEventArgs e)
+        {
+            string sRegex = @"^GV\d{2}$";
+            Regex reg = new Regex(sRegex);
+            bool isValid = reg.IsMatch(txtMa.Text);
+            if (!isValid)
+            {
+                errorProviderGV.SetError(txtMa, "Mã phải nhập đúng định dạng(VD:GV01)");
+            }
+            else errorProviderGV.SetError(txtMa, "");
+        }
+
+        private void txtTen_Validating(object sender, CancelEventArgs e)
+        {
+            string sRegex = @"^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\W|_]+$";
+            Regex reg = new Regex(sRegex);
+            bool isValid = reg.IsMatch(txtTen.Text);
+            if (!isValid)
+            {
+                errorProviderGV.SetError(txtTen, "Họ tên không chứa số và kí tự đặc biệt");
+            }
+            else errorProviderGV.SetError(txtTen, "");
+        }
+
+        private void txtDC_Validating(object sender, CancelEventArgs e)
+        {
+            string sRegex = @"^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\W|_]+$";
+            Regex reg = new Regex(sRegex);
+            bool isValid = reg.IsMatch(txtDC.Text);
+            if (!isValid)
+            {
+                errorProviderGV.SetError(txtDC, "Địa chỉ không chứa số và kí tự đặc biệt");
+            }
+            else errorProviderGV.SetError(txtDC, "");
+        }
+
+        private void txtSDT_Validating(object sender, CancelEventArgs e)
+        {
+            string sRegex = @"^(84|0[3|5|7|8|9])+([0-9]{8})\b$";
+            Regex reg = new Regex(sRegex);
+            bool isValid = reg.IsMatch(txtSDT.Text);
+            if (!isValid)
+            {
+                errorProviderGV.SetError(txtSDT, "Số điện thoại phải gồm 10 chữ số và bắt đầu là: 84/03/09/05/07/08");
+            }
+            else errorProviderGV.SetError(txtSDT, "");
+        }
     }
+    
 }

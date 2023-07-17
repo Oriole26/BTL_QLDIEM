@@ -1,16 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Data.SqlClient;
 using System.Configuration;
-using System.Net;
-using System.Xml;
+using System.Data;
+using System.Data.SqlClient;
+using System.Windows.Forms;
 
 namespace BTL_QLDIEM
 {
@@ -142,6 +134,7 @@ namespace BTL_QLDIEM
 
         private void FrDiem_Load(object sender, EventArgs e)
         {
+        
             hienDSDiem();
         }
 
@@ -187,7 +180,8 @@ namespace BTL_QLDIEM
                                 else Cmd.Parameters.Add(new SqlParameter("@fdiem45P", float.Parse(txtDiem45p.Text)));
                                 if (txtDiemHK.Text == "") Cmd.Parameters.Add(new SqlParameter("@fdiemHocKy", DBNull.Value));
                                 else Cmd.Parameters.Add(new SqlParameter("@fdiemHocKy", float.Parse(txtDiemHK.Text)));
-
+                                if (txtDiemHK.Text == "") Cmd.Parameters.Add(new SqlParameter("@fdiemTBHK", DBNull.Value));
+                                else Cmd.Parameters.Add(new SqlParameter("@fdiemTBHK", float.Parse(txtDiemTB.Text)));
                                 Cmd.ExecuteNonQuery();
 
                                 int tmp = cbmaLH.SelectedIndex;
@@ -201,10 +195,7 @@ namespace BTL_QLDIEM
             }
         }
 
-        private void txtTenM_TextChanged(object sender, EventArgs e)
-        {
-
-        }
+      
 
         private void grvDiem_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -219,6 +210,7 @@ namespace BTL_QLDIEM
             txtDiem15p.Text = Convert.ToString(row.Cells["fDiem15P"].Value);
             txtDiem45p.Text = Convert.ToString(row.Cells["fDiem45P"].Value);
             txtDiemHK.Text = Convert.ToString(row.Cells["fDiemHocKy"].Value);
+            txtDiemTB.Text = Convert.ToString(row.Cells["fDiemTBHK"].Value);
         }
 
         private void btnSua_Click(object sender, EventArgs e)
@@ -247,9 +239,9 @@ namespace BTL_QLDIEM
                         else cmd.Parameters.Add(new SqlParameter("@fdiem45P", float.Parse(txtDiem45p.Text)));
                         if (txtDiemHK.Text == "") cmd.Parameters.Add(new SqlParameter("@fdiemHocKy", DBNull.Value));
                         else cmd.Parameters.Add(new SqlParameter("@fdiemHocKy", float.Parse(txtDiemHK.Text)));
-
+                        if (txtDiemHK.Text == "") cmd.Parameters.Add(new SqlParameter("@fdiemTBHK", DBNull.Value));
+                        else cmd.Parameters.Add(new SqlParameter("@fdiemTBHK", float.Parse(txtDiemTB.Text)));
                         cmd.ExecuteNonQuery();
-
                         int tmp = cbmaLH.SelectedIndex;
                         hienDSDiem();
                         cbmaLH.SelectedIndex = 0;
@@ -345,6 +337,23 @@ namespace BTL_QLDIEM
                         DSGV.ShowDialog();
                     }
                 }
+            }
+        }
+
+        private void txtDiem_TextChanged(object sender, EventArgs e)
+        {
+            if (!String.IsNullOrEmpty(txtDiemM.Text) && !String.IsNullOrEmpty(txtDiem15p.Text) 
+                && !String.IsNullOrEmpty(txtDiem45p.Text) && !String.IsNullOrEmpty(txtDiemHK.Text))
+            {
+                float diemM = float.Parse(txtDiemM.Text);
+                float diem15p = float.Parse(txtDiem15p.Text);
+                float diem45p = float.Parse(txtDiem45p.Text);
+                float diemHK = float.Parse(txtDiemHK.Text);
+
+                txtDiemTB.Text = (((diemM + diem15p) + 2 * diem45p + 3 * diemHK) / 7).ToString();
+            } else
+            {
+                txtDiemTB.Text = "";
             }
         }
 

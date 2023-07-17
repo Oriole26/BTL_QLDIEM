@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using System.Configuration;
+using System.Text.RegularExpressions;
 
 namespace BTL_QLDIEM
 {
@@ -210,6 +211,42 @@ namespace BTL_QLDIEM
                 trangchu.ShowDialog();
                 this.Close();
             }
+        }
+
+        private void txtMaMH_Validating(object sender, CancelEventArgs e)
+        {
+            string sRegex = @"^[A-Z]+$";
+            Regex reg = new Regex(sRegex);
+            bool isValid = reg.IsMatch(txtMaMH.Text);
+            if (!isValid)
+            {
+                errorProviderMH.SetError(txtMaMH, "Mã môn không được chứa số và kí tự, viết hoa và tương ứng với tên môn viết liền không dấu(VD:SINHHOC)");
+            }
+            else errorProviderMH.SetError(txtMaMH, "");
+        }
+
+        private void txtTenMH_Validating(object sender, CancelEventArgs e)
+        {
+            string sRegex = @"^[A-Z]{1}\w|\s\w$";
+            Regex reg = new Regex(sRegex);
+            bool isValid = reg.IsMatch(txtTenMH.Text);
+            if (!isValid)
+            {
+                errorProviderMH.SetError(txtTenMH, "Tên môn không được chứa số và kí tự và viết hoa chữ cái đầu");
+            }
+            else errorProviderMH.SetError(txtTenMH, "");
+        }
+
+        private void txtSotiet_Validating(object sender, CancelEventArgs e)
+        {
+            string sRegex = @"^(?!0+$)[0-9]{1,12}$";
+            Regex reg = new Regex(sRegex);
+            bool isValid = reg.IsMatch(txtSotiet.Text);
+            if (!isValid)
+            {
+                errorProviderMH.SetError(txtSotiet, "Số tiết phải là số và lớn hơn 0!");
+            }
+            else errorProviderMH.SetError(txtSotiet, "");
         }
     }
 }

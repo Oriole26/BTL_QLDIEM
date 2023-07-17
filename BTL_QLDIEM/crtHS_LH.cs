@@ -16,14 +16,14 @@ namespace BTL_QLDIEM {
     using CrystalDecisions.CrystalReports.Engine;
     
     
-    public class crpDSGV : ReportClass {
+    public class crtHS_LH : ReportClass {
         
-        public crpDSGV() {
+        public crtHS_LH() {
         }
         
         public override string ResourceName {
             get {
-                return "crpDSGV.rpt";
+                return "crtHS_LH.rpt";
             }
             set {
                 // Do nothing
@@ -41,7 +41,7 @@ namespace BTL_QLDIEM {
         
         public override string FullResourceName {
             get {
-                return "BTL_QLDIEM.crpDSGV.rpt";
+                return "BTL_QLDIEM.crtHS_LH.rpt";
             }
             set {
                 // Do nothing
@@ -87,20 +87,12 @@ namespace BTL_QLDIEM {
                 return this.ReportDefinition.Sections[4];
             }
         }
-        
-        [Browsable(false)]
-        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_stt {
-            get {
-                return this.DataDefinition.ParameterFields[0];
-            }
-        }
     }
     
     [System.Drawing.ToolboxBitmapAttribute(typeof(CrystalDecisions.Shared.ExportOptions), "report.bmp")]
-    public class CachedcrpDSGV : Component, ICachedReport {
+    public class CachedcrtHS_LH : Component, ICachedReport {
         
-        public CachedcrpDSGV() {
+        public CachedcrtHS_LH() {
         }
         
         [Browsable(false)]
@@ -137,7 +129,7 @@ namespace BTL_QLDIEM {
         }
         
         public virtual CrystalDecisions.CrystalReports.Engine.ReportDocument CreateReport() {
-            crpDSGV rpt = new crpDSGV();
+            crtHS_LH rpt = new crtHS_LH();
             rpt.Site = this.Site;
             return rpt;
         }
