@@ -172,6 +172,7 @@ namespace BTL_QLDIEM
         private void grvHS_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
+
             DataGridViewRow row = new DataGridViewRow();
             row = grvHS.Rows[e.RowIndex];
             string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;

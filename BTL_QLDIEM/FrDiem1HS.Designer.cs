@@ -43,6 +43,8 @@ namespace BTL_QLDIEM
             this.cbHK = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.cboMH = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // label1
@@ -128,7 +130,7 @@ namespace BTL_QLDIEM
             // cbNamhoc
             // 
             this.cbNamhoc.FormattingEnabled = true;
-            this.cbNamhoc.Location = new System.Drawing.Point(162, 50);
+            this.cbNamhoc.Location = new System.Drawing.Point(115, 47);
             this.cbNamhoc.Name = "cbNamhoc";
             this.cbNamhoc.Size = new System.Drawing.Size(121, 24);
             this.cbNamhoc.TabIndex = 10;
@@ -136,7 +138,7 @@ namespace BTL_QLDIEM
             // cbHK
             // 
             this.cbHK.FormattingEnabled = true;
-            this.cbHK.Location = new System.Drawing.Point(437, 50);
+            this.cbHK.Location = new System.Drawing.Point(390, 47);
             this.cbHK.Name = "cbHK";
             this.cbHK.Size = new System.Drawing.Size(121, 24);
             this.cbHK.TabIndex = 11;
@@ -144,7 +146,7 @@ namespace BTL_QLDIEM
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(74, 50);
+            this.label6.Location = new System.Drawing.Point(27, 47);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(64, 17);
             this.label6.TabIndex = 12;
@@ -153,17 +155,36 @@ namespace BTL_QLDIEM
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(349, 50);
+            this.label7.Location = new System.Drawing.Point(302, 47);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(47, 17);
             this.label7.TabIndex = 13;
             this.label7.Text = "Học kì";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(532, 47);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(62, 17);
+            this.label8.TabIndex = 15;
+            this.label8.Text = "Môn học";
+            // 
+            // cboMH
+            // 
+            this.cboMH.FormattingEnabled = true;
+            this.cboMH.Location = new System.Drawing.Point(620, 47);
+            this.cboMH.Name = "cboMH";
+            this.cboMH.Size = new System.Drawing.Size(121, 24);
+            this.cboMH.TabIndex = 14;
             // 
             // FrDiem1HS
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.cboMH);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.cbHK);
@@ -180,6 +201,7 @@ namespace BTL_QLDIEM
             this.Controls.Add(this.label1);
             this.Name = "FrDiem1HS";
             this.Text = "FrDiem1HS";
+            this.Load += new System.EventHandler(this.FrDiem1HS_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -201,5 +223,7 @@ namespace BTL_QLDIEM
         private System.Windows.Forms.ComboBox cbHK;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.ComboBox cboMH;
     }
 }

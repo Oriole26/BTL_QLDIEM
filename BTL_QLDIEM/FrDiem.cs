@@ -134,7 +134,6 @@ namespace BTL_QLDIEM
 
         private void FrDiem_Load(object sender, EventArgs e)
         {
-        
             hienDSDiem();
         }
 
