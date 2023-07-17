@@ -395,21 +395,7 @@ namespace BTL_QLDIEM
             }
             else errorProviderHS.SetError(txtDC, "");
         }
-                private void cbMaLH_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cbMaLH.Focused)
-            {
-                using (SqlConnection cnn = new SqlConnection(constr))
-                {
-                    using (SqlCommand cmd = new SqlCommand("prSelectHSByMaLop", cnn))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@malh", cbMaLH.SelectedValue.ToString());
-                        using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
-                        {
-                            tbHS.Clear();
-                            ad.Fill(tbHS);
-                            //DataView v = new DataView(tbHS);
+
         private void cbMaLH_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cbMaLH.Focused)
