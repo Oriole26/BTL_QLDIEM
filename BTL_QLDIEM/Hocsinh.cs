@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using System.Text.RegularExpressions;
 using System.Configuration;
 namespace BTL_QLDIEM
 {
@@ -44,17 +45,58 @@ namespace BTL_QLDIEM
                     cmd.CommandType = CommandType.Text;
                     using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
                     {
-                        DataTable tb = new DataTable("tblLH");
-
+                        DataTable tb = new DataTable("tblMH");
+                        tb.Clear();
                         ad.Fill(tb);
-
-                        cbMaLH.DisplayMember = "sTenLH";
+                        cbMaLH.DisplayMember = "sMaLH";
                         cbMaLH.ValueMember = "sMaLH";
                         cbMaLH.DataSource = tb;
+
                     }
                 }
 
             }
+        }
+        public bool KTTT()
+        {
+            if (txtMa.Text.Trim().Length == 0)
+            {
+                errorProviderHS.SetError(txtMa, "Vui lòng nhập mã học sinh ! ");
+                return false;
+            }
+            else errorProviderHS.SetError(txtMa, "");
+
+
+            if (txtTen.Text.Trim().Length == 0)
+            {
+                errorProviderHS.SetError(txtTen, "Vui lòng nhập tên học sinh!");
+                return false;
+            }
+            else errorProviderHS.SetError(txtTen, "");
+
+            if (cbGT.Text.Trim().Length == 0)
+            {
+                errorProviderHS.SetError(cbGT, "Vui lòng chọn giới tính !");
+                return false;
+            }
+            else errorProviderHS.SetError(cbGT, "");
+
+            if (txtDC.Text.Trim().Length == 0)
+            {
+                errorProviderHS.SetError(txtDC, "Vui lòng nhập địa chỉ!");
+                return false;
+            }
+            else errorProviderHS.SetError(txtDC, "");
+
+            if (txtDT.Text.Trim().Length == 0)
+            {
+                errorProviderHS.SetError(txtDT, "Vui lòng nhập dân tộc !");
+                return false;
+            }
+            else errorProviderHS.SetError(txtDT, "");
+
+            return true;
+           
         }
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -70,10 +112,9 @@ namespace BTL_QLDIEM
 
 
         }
-
+       
         private void btnThem_Click(object sender, EventArgs e)
         {
-            bool check = true;
             using (SqlConnection cnn = new SqlConnection(constr))
             {
                 cnn.Open();
@@ -88,48 +129,8 @@ namespace BTL_QLDIEM
                     {
                         MessageBox.Show("Trùng mã!", "Thông báo", MessageBoxButtons.OK);
                     }
-                    if (txtMa.Text.Trim().Length == 0)
-                    {
-                        errorProviderHS.SetError(txtMa, "Vui lòng nhập mã học sinh ! ");
-                        check = false;
-                    }
-                    else errorProviderHS.SetError(txtMa, "");
-
-
-                    if (txtTen.Text.Trim().Length == 0)
-                    {
-                        errorProviderHS.SetError(txtTen, "Vui lòng nhập tên học sinh!");
-                        check = false;
-                    }
-                    else errorProviderHS.SetError(txtTen, "");
-
-                    if (cbGT.Text.Trim().Length == 0)
-                    {
-                        errorProviderHS.SetError(cbGT, "Vui lòng chọn giới tính !");
-                        check = false;
-                    }
-                    else errorProviderHS.SetError(cbGT, "");
-
-                    if (txtDC.Text.Trim().Length == 0)
-                    {
-                        errorProviderHS.SetError(txtDC, "Vui lòng nhập địa chỉ!");
-                        check = false;
-                    }
-                    else errorProviderHS.SetError(txtDC, "");
-
-                    if (txtDT.Text.Trim().Length == 0)
-                    {
-                        errorProviderHS.SetError(txtDT, "Vui lòng nhập dân tộc !");
-                        check = false;
-                    }
-                    else errorProviderHS.SetError(txtDT, "");
                     
-
-                   //kiểm tra ngày sinh k được vượt quá ngày hiện tại
-
-
-                   
-                    if (check)
+                    else if (KTTT())
                     {
                         using (SqlCommand Cmd = new SqlCommand("prInsert_HS", cnn))
                         {
@@ -142,7 +143,10 @@ namespace BTL_QLDIEM
                             Cmd.Parameters.Add(new SqlParameter("@sdantoc", txtDT.Text));
                             Cmd.Parameters.Add(new SqlParameter("@smalh", cbMaLH.Text));
                             Cmd.ExecuteNonQuery();
+                            int tmp = cbMaLH.SelectedIndex;
                             hienDSHS();
+                            cbMaLH.SelectedIndex = tmp;
+                            
                         }
                     }
 
@@ -278,7 +282,7 @@ namespace BTL_QLDIEM
                 cnn.Open();
                 if (cnn.State == ConnectionState.Closed)
                     return;
-                using (SqlCommand cmd = new SqlCommand("tblHocsinh_Select", cnn))
+                using (SqlCommand cmd = new SqlCommand("prSelect_HS", cnn))
                 {
 
 
@@ -301,10 +305,71 @@ namespace BTL_QLDIEM
             }
         }
 
+        private void dtNS_Validating(object sender, CancelEventArgs e)
+        {
+            int birthday = dtNS.Value.Year;
+            int currentYear = DateTime.Now.Year;
+            if (currentYear - birthday <= 15)
+            {
+                errorProviderHS.SetError(dtNS, "Tuổi không được nhỏ hơn 15 tuổi !");
+            }
+            else
+                errorProviderHS.SetError(dtNS, "");
 
+        }
 
+        private void txtMa_Validating(object sender, CancelEventArgs e)
+        {
+            string sRegex = @"^HS\d{3}|\d{2}$";
+            Regex reg = new Regex(sRegex);
+            bool isValid = reg.IsMatch(txtMa.Text);
+            if (!isValid)
+            {
+                errorProviderHS.SetError(txtMa, "Mã phải nhập đúng định dạng(VD:HS01)");
+            }
+            else errorProviderHS.SetError(txtMa, "");
+        }
 
-        
+        private void txtTen_Validating(object sender, CancelEventArgs e)
+        {
+            string sRegex = @"^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\W|_]+$";
+            Regex reg = new Regex(sRegex);
+            bool isValid = reg.IsMatch(txtTen.Text);
+            if (!isValid)
+            {
+                errorProviderHS.SetError(txtTen, "Họ tên không chứa số và kí tự đặc biệt");
+            }
+            else errorProviderHS.SetError(txtTen, "");
+        }
+
+        private void txtDT_Validating(object sender, CancelEventArgs e)
+        {
+            string sRegex = @"^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\W|_]+$";
+            Regex reg = new Regex(sRegex);
+            bool isValid = reg.IsMatch(txtDT.Text);
+            if (!isValid)
+            {
+                errorProviderHS.SetError(txtDT, "Địa chỉ không chứa số và kí tự đặc biệt");
+            }
+            else errorProviderHS.SetError(txtDT, "");
+        }
+
+        private void txtDC_Validating(object sender, CancelEventArgs e)
+        {
+            string sRegex = @"^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\W|_]+$";
+            Regex reg = new Regex(sRegex);
+            bool isValid = reg.IsMatch(txtDC.Text);
+            if (!isValid)
+            {
+                errorProviderHS.SetError(txtDC, "Địa chỉ không chứa số và kí tự đặc biệt");
+            }
+            else errorProviderHS.SetError(txtDC, "");
+        }
+
+        private void cbMaLH_SelectedIndexChanged(object sender, EventArgs e)
+        {
+           
+        }
     }
 }
 

@@ -111,6 +111,7 @@ namespace BTL_QLDIEM
             this.txtMa.Name = "txtMa";
             this.txtMa.Size = new System.Drawing.Size(209, 27);
             this.txtMa.TabIndex = 6;
+            this.txtMa.Validating += new System.ComponentModel.CancelEventHandler(this.txtMa_Validating);
             // 
             // txtTen
             // 
@@ -119,6 +120,7 @@ namespace BTL_QLDIEM
             this.txtTen.Name = "txtTen";
             this.txtTen.Size = new System.Drawing.Size(209, 27);
             this.txtTen.TabIndex = 7;
+            this.txtTen.Validating += new System.ComponentModel.CancelEventHandler(this.txtTen_Validating);
             // 
             // txtSiso
             // 

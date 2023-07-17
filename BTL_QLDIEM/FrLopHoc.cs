@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using System.Text.RegularExpressions;
 using System.Configuration;
 namespace BTL_QLDIEM
 {
@@ -17,27 +18,12 @@ namespace BTL_QLDIEM
         {
             InitializeComponent();
         }
-        private DataTable getLopHoc()
-        {
-            string str = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
-            using(SqlConnection cnn = new SqlConnection(str))
-            {
-                using(SqlCommand cmd = new SqlCommand("Select*from tblLopHoc",cnn))
-                {
-                    cmd.CommandType = CommandType.Text;
-                    using(SqlDataAdapter ad = new SqlDataAdapter(cmd))
-                    {
-                        DataTable tb = new DataTable("tblLH");
-                        ad.Fill(tb);
-                        return tb;
-                    }
-                }
-            }
-        }
+        string str = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
+
+    
         //Hiện danh sách lớp học ra gridview
             private void hienDSLH()
              {
-                string str = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
                 using(SqlConnection cnn = new SqlConnection(str))
                 {
                     using(SqlCommand cmd = new SqlCommand("prSelect_LH",cnn))
@@ -73,7 +59,7 @@ namespace BTL_QLDIEM
                         }
                     }
                     //Lấy mã  và tên GV từ bảng GV
-                    using (SqlCommand cmd = new SqlCommand("prGiaovientheoLH", cnn))
+                    /*using (SqlCommand cmd = new SqlCommand("prGiaovientheoLH", cnn))
                     {
                         cmd.CommandType = CommandType.Text;
                         using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
@@ -88,7 +74,7 @@ namespace BTL_QLDIEM
                        
                         }
 
-                    }
+                    }*/
                     
                 }
             }
@@ -105,8 +91,7 @@ namespace BTL_QLDIEM
         //Thêm lớp học
         private void btnThem_Click(object sender, EventArgs e)
         {
-            string constr = ConfigurationManager.ConnectionStrings["db_QLdiem"].ConnectionString;
-            using (SqlConnection cnn = new SqlConnection(constr))
+            using (SqlConnection cnn = new SqlConnection(str))
             {
                 bool check = true;
                 cnn.Open();
@@ -271,6 +256,30 @@ namespace BTL_QLDIEM
         private void btnReset_Click(object sender, EventArgs e)
         {
             ResetLH();
+        }
+
+        private void txtTen_Validating(object sender, CancelEventArgs e)
+        {
+            string sRegex = @"^10|11|12A1|2|3$";
+            Regex reg = new Regex(sRegex);
+            bool isValid = reg.IsMatch(txtTen.Text);
+            if (!isValid)
+            {
+                errorProviderLH.SetError(txtTen, "Tên lớp phải đúng định dạng(VD: 10A1)");
+            }
+            else errorProviderLH.SetError(txtTen, "");
+        }
+
+        private void txtMa_Validating(object sender, CancelEventArgs e)
+        {
+            string sRegex = @"^LOP10|11|12\d{4}$";
+            Regex reg = new Regex(sRegex);
+            bool isValid = reg.IsMatch(txtMa.Text);
+            if (!isValid)
+            {
+                errorProviderLH.SetError(txtMa, "Tên lớp phải đúng định dạng(VD: 10A1)");
+            }
+            else errorProviderLH.SetError(txtMa, "");
         }
     }
 }

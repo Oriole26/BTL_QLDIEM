@@ -31,6 +31,8 @@ namespace BTL_QLDIEM
         {
             this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cbmaGV = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.txtSotiet = new System.Windows.Forms.TextBox();
             this.txtTenMH = new System.Windows.Forms.TextBox();
             this.txtMaMH = new System.Windows.Forms.TextBox();
@@ -45,8 +47,6 @@ namespace BTL_QLDIEM
             this.btnThoat = new System.Windows.Forms.Button();
             this.btnDatlai = new System.Windows.Forms.Button();
             this.errorProviderMH = new System.Windows.Forms.ErrorProvider(this.components);
-            this.label5 = new System.Windows.Forms.Label();
-            this.cbmaGV = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grvMH)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProviderMH)).BeginInit();
@@ -71,6 +71,24 @@ namespace BTL_QLDIEM
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Thông tin";
             // 
+            // cbmaGV
+            // 
+            this.cbmaGV.FormattingEnabled = true;
+            this.cbmaGV.Location = new System.Drawing.Point(148, 275);
+            this.cbmaGV.Name = "cbmaGV";
+            this.cbmaGV.Size = new System.Drawing.Size(139, 28);
+            this.cbmaGV.TabIndex = 7;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(8, 275);
+            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(110, 20);
+            this.label5.TabIndex = 6;
+            this.label5.Text = "Giáo viên dạy";
+            // 
             // txtSotiet
             // 
             this.txtSotiet.Location = new System.Drawing.Point(148, 203);
@@ -78,6 +96,7 @@ namespace BTL_QLDIEM
             this.txtSotiet.Name = "txtSotiet";
             this.txtSotiet.Size = new System.Drawing.Size(139, 27);
             this.txtSotiet.TabIndex = 5;
+            this.txtSotiet.Validating += new System.ComponentModel.CancelEventHandler(this.txtSotiet_Validating);
             // 
             // txtTenMH
             // 
@@ -86,6 +105,7 @@ namespace BTL_QLDIEM
             this.txtTenMH.Name = "txtTenMH";
             this.txtTenMH.Size = new System.Drawing.Size(240, 27);
             this.txtTenMH.TabIndex = 4;
+            this.txtTenMH.Validating += new System.ComponentModel.CancelEventHandler(this.txtTenMH_Validating);
             // 
             // txtMaMH
             // 
@@ -94,6 +114,7 @@ namespace BTL_QLDIEM
             this.txtMaMH.Name = "txtMaMH";
             this.txtMaMH.Size = new System.Drawing.Size(240, 27);
             this.txtMaMH.TabIndex = 3;
+            this.txtMaMH.Validating += new System.ComponentModel.CancelEventHandler(this.txtMaMH_Validating);
             // 
             // label3
             // 
@@ -206,24 +227,6 @@ namespace BTL_QLDIEM
             // errorProviderMH
             // 
             this.errorProviderMH.ContainerControl = this;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(8, 275);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(110, 20);
-            this.label5.TabIndex = 6;
-            this.label5.Text = "Giáo viên dạy";
-            // 
-            // cbmaGV
-            // 
-            this.cbmaGV.FormattingEnabled = true;
-            this.cbmaGV.Location = new System.Drawing.Point(148, 275);
-            this.cbmaGV.Name = "cbmaGV";
-            this.cbmaGV.Size = new System.Drawing.Size(139, 28);
-            this.cbmaGV.TabIndex = 7;
             // 
             // frMonhoc
             // 

@@ -108,15 +108,17 @@ namespace BTL_QLDIEM
             this.txtMa.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtMa.Name = "txtMa";
             this.txtMa.Size = new System.Drawing.Size(221, 27);
-            this.txtMa.TabIndex = 6;
+            this.txtMa.TabIndex = 1;
+            this.txtMa.Validating += new System.ComponentModel.CancelEventHandler(this.txtMa_Validating);
             // 
             // txtTen
             // 
-            this.txtTen.Location = new System.Drawing.Point(109, 132);
+            this.txtTen.Location = new System.Drawing.Point(109, 117);
             this.txtTen.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtTen.Name = "txtTen";
             this.txtTen.Size = new System.Drawing.Size(221, 27);
-            this.txtTen.TabIndex = 7;
+            this.txtTen.TabIndex = 2;
+            this.txtTen.Validating += new System.ComponentModel.CancelEventHandler(this.txtTen_Validating);
             // 
             // txtDC
             // 
@@ -124,7 +126,8 @@ namespace BTL_QLDIEM
             this.txtDC.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtDC.Name = "txtDC";
             this.txtDC.Size = new System.Drawing.Size(221, 27);
-            this.txtDC.TabIndex = 8;
+            this.txtDC.TabIndex = 3;
+            this.txtDC.Validating += new System.ComponentModel.CancelEventHandler(this.txtDC_Validating);
             // 
             // txtSDT
             // 
@@ -132,7 +135,8 @@ namespace BTL_QLDIEM
             this.txtSDT.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtSDT.Name = "txtSDT";
             this.txtSDT.Size = new System.Drawing.Size(221, 27);
-            this.txtSDT.TabIndex = 9;
+            this.txtSDT.TabIndex = 4;
+            this.txtSDT.Validating += new System.ComponentModel.CancelEventHandler(this.txtSDT_Validating);
             // 
             // cbGT
             // 

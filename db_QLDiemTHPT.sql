@@ -123,6 +123,7 @@ CREATE TABLE tblDiem (
 						fDiem15P FLOAT,
 						fDiem45P FLOAT,
 						fDiemHocKy FLOAT,
+						fDiemTB FLOAT,
 						CONSTRAINT FK_tblDiem_tblLH FOREIGN KEY(sMaLH) REFERENCES tblLopHoc(sMaLH),
 						CONSTRAINT FK_tblDiem_tblMH FOREIGN KEY(sMaMH) REFERENCES tblMonHoc(sMaMH),
 						CONSTRAINT FK_tblDiem_tblHS FOREIGN KEY(sMaHS) REFERENCES tblHocSinh(sMaHS),
@@ -131,13 +132,15 @@ CREATE TABLE tblDiem (
 						CONSTRAINT CK_DIEM_MIENG CHECK(fDiemMieng BETWEEN 0 AND 10),
 						CONSTRAINT CK_DIEM_15P CHECK(fDiem15P BETWEEN 0 AND 10),
 						CONSTRAINT CK_DIEM_45P CHECK(fDiem45P BETWEEN 0 AND 10),
-						CONSTRAINT CK_DIEM_HK CHECK(fDiemHocKy BETWEEN 0 AND 10)
+						CONSTRAINT CK_DIEM_HK CHECK(fDiemHocKy BETWEEN 0 AND 10),
+						CONSTRAINT CK_DIEM_TB CHECK(fDiemHocKy BETWEEN 0 AND 10)
 						) 
 INSERT INTO tblDiem VALUES
 					('LOP1011920','HS01','NH1920','HK1','SINHHOC', 7.5, 6.5,8,7.5),
 					('LOP1011920','HS02','NH1920','HK1','SINHHOC', 7, 8,8,8)
 
 DROP TABLE tblDiem
+
 CREATE TABLE tblNguoiDung (
 							iIDNguoiDung INT PRIMARY KEY,
 							sTenNguoiDung NVARCHAR(30) UNIQUE, 
@@ -241,7 +244,8 @@ GO
 ALTER PROC prSelect_MaLH
 AS
 BEGIN
-	
+	SELECT sMaLH
+	FROM tblLopHoc
 END
 GO
 
@@ -631,7 +635,7 @@ END
 GO
 
 -- Thêm thông tin điểm
-CREATE PROC prInsert_Diem
+ALTER PROC prInsert_Diem
 @smalh VARCHAR(10),
 @smahs VARCHAR(10), 
 @smanh VARCHAR(6),
@@ -640,11 +644,12 @@ CREATE PROC prInsert_Diem
 @fdiemMieng FLOAT,
 @fdiem15P FLOAT,
 @fdiem45P FLOAT,
-@fdiemHocKy FLOAT
+@fdiemHocKy FLOAT,
+@fdiemTBHK FLOAT
 AS
 BEGIN
 	INSERT INTO tblDiem
-	VALUES(@smalh ,@smahs ,@smanh ,@smahk ,@smamh,@fdiemMieng ,@fdiem15P ,@fdiem45P ,@fdiemHocKy )
+	VALUES(@smalh ,@smahs ,@smanh ,@smahk ,@smamh,@fdiemMieng ,@fdiem15P ,@fdiem45P ,@fdiemHocKy ,@fdiemTBHK )
 END
 GO
 
@@ -724,6 +729,23 @@ BEGIN
 	WHERE sMaLH = @smalh
 END
 GO
+-- Lấy mã và tên học sinh theo mã lớp học
+CREATE  PROC prSelect_MaTenLH_byNH
+@smanh VARCHAR(6)
+AS
+BEGIN
+	SELECT lh.sMaLH, lh.sTenLH
+	FROM tblLopHoc AS lh
+		LEFT JOIN tblDiem AS d
+	ON  d.sMaLH =	lh.sMaLH 
+	WHERE lh.sMaNamHoc = @smanh
+	SELECT sMaNamHoc,sTenNamHoc
+	FROM tblNamHoc
+	WHERE sMaNamHoc = @smanh
+END
+GO
+
+
 
 --Sửa điểm
 CREATE PROC prUpdate_Diem
@@ -773,6 +795,18 @@ BEGIN
 END
 GO
 
+
+--Lấy ra học sinh theo từng lớp
+CREATE PROC prSelect_HSbyLH
+@smalh NVARCHAR(10)
+AS
+BEGIN
+	SELECT a.sMaLH,a.sTenLH, b.*
+		FROM tblLopHoc a INNER JOIN tblHocSinh b
+		ON a.sMaLH = b.sMaLH
+		WHERE a.sMaLH = @smalh
+		ORDER BY a.sMaLH
+END
 /*
 -- ĐĂNG NHẬP --
 -- Check đăng nhập
@@ -811,7 +845,6 @@ BEGIN
    and tblLopHoc.sMaHS = @mahs
    GROUP BY tblLopHoc.sMaHS, tblHocSinh.sHoTenHS
 END
-
 
   --lấy ra số lượng
   CREATE PROC pr_SelectSL

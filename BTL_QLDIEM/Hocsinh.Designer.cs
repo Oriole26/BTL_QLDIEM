@@ -111,7 +111,8 @@ namespace BTL_QLDIEM
             this.cbMaLH.Margin = new System.Windows.Forms.Padding(4);
             this.cbMaLH.Name = "cbMaLH";
             this.cbMaLH.Size = new System.Drawing.Size(150, 28);
-            this.cbMaLH.TabIndex = 25;
+            this.cbMaLH.TabIndex = 7;
+            this.cbMaLH.SelectedIndexChanged += new System.EventHandler(this.cbMaLH_SelectedIndexChanged);
             // 
             // label8
             // 
@@ -119,9 +120,9 @@ namespace BTL_QLDIEM
             this.label8.Location = new System.Drawing.Point(936, 64);
             this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(69, 20);
+            this.label8.Size = new System.Drawing.Size(59, 20);
             this.label8.TabIndex = 24;
-            this.label8.Text = "Tên  lớp";
+            this.label8.Text = "Mã lớp";
             // 
             // btnReset
             // 
@@ -188,15 +189,17 @@ namespace BTL_QLDIEM
             this.cbGT.Margin = new System.Windows.Forms.Padding(4);
             this.cbGT.Name = "cbGT";
             this.cbGT.Size = new System.Drawing.Size(150, 28);
-            this.cbGT.TabIndex = 10;
+            this.cbGT.TabIndex = 4;
             // 
             // dtNS
             // 
+            this.dtNS.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtNS.Location = new System.Drawing.Point(184, 205);
             this.dtNS.Margin = new System.Windows.Forms.Padding(4);
             this.dtNS.Name = "dtNS";
-            this.dtNS.Size = new System.Drawing.Size(228, 27);
-            this.dtNS.TabIndex = 9;
+            this.dtNS.Size = new System.Drawing.Size(147, 27);
+            this.dtNS.TabIndex = 3;
+            this.dtNS.Validating += new System.ComponentModel.CancelEventHandler(this.dtNS_Validating);
             // 
             // txtDT
             // 
@@ -204,7 +207,8 @@ namespace BTL_QLDIEM
             this.txtDT.Margin = new System.Windows.Forms.Padding(4);
             this.txtDT.Name = "txtDT";
             this.txtDT.Size = new System.Drawing.Size(228, 27);
-            this.txtDT.TabIndex = 8;
+            this.txtDT.TabIndex = 6;
+            this.txtDT.Validating += new System.ComponentModel.CancelEventHandler(this.txtDT_Validating);
             // 
             // txtDC
             // 
@@ -212,7 +216,8 @@ namespace BTL_QLDIEM
             this.txtDC.Margin = new System.Windows.Forms.Padding(4);
             this.txtDC.Name = "txtDC";
             this.txtDC.Size = new System.Drawing.Size(228, 27);
-            this.txtDC.TabIndex = 7;
+            this.txtDC.TabIndex = 5;
+            this.txtDC.Validating += new System.ComponentModel.CancelEventHandler(this.txtDC_Validating);
             // 
             // txtTen
             // 
@@ -220,7 +225,8 @@ namespace BTL_QLDIEM
             this.txtTen.Margin = new System.Windows.Forms.Padding(4);
             this.txtTen.Name = "txtTen";
             this.txtTen.Size = new System.Drawing.Size(228, 27);
-            this.txtTen.TabIndex = 6;
+            this.txtTen.TabIndex = 2;
+            this.txtTen.Validating += new System.ComponentModel.CancelEventHandler(this.txtTen_Validating);
             // 
             // txtMa
             // 
@@ -229,6 +235,7 @@ namespace BTL_QLDIEM
             this.txtMa.Name = "txtMa";
             this.txtMa.Size = new System.Drawing.Size(228, 27);
             this.txtMa.TabIndex = 1;
+            this.txtMa.Validating += new System.ComponentModel.CancelEventHandler(this.txtMa_Validating);
             // 
             // label6
             // 
