@@ -135,9 +135,10 @@ CREATE TABLE tblDiem (
 						CONSTRAINT CK_DIEM_HK CHECK(fDiemHocKy BETWEEN 0 AND 10),
 						CONSTRAINT CK_DIEM_TB CHECK(fDiemHocKy BETWEEN 0 AND 10)
 						) 
+						
 INSERT INTO tblDiem VALUES
-					('LOP1011920','HS01','NH1920','HK1','SINHHOC', 7.5, 6.5,8,7.5),
-					('LOP1011920','HS02','NH1920','HK1','SINHHOC', 7, 8,8,8)
+					('LOP1011920','HS01','NH1920','HK1','SINHHOC', 7.5, 6.5,8,7.5, 7.375),
+					('LOP1011920','HS02','NH1920','HK1','SINHHOC', 7, 8,8,8, 7.75)
 
 CREATE TABLE tblNguoiDung (
 							iIDNguoiDung INT PRIMARY KEY,
@@ -867,7 +868,7 @@ CREATE PROC pr_CountHS
 @mahs VARCHAR(10)
 AS
 BEGIN
-   SELECT tblLopHoc.sMaHS COUNT (tblLopHoc.sMaHS) AS [soluong]
+   SELECT tblLopHoc.sMaHS, COUNT (tblLopHoc.sMaHS) AS [soluong]
    FROM tblLopHoc,tblHocSinh
    WHERE tblLopHoc.sMaHS =tblHocSinh.sMaHS 
    and tblLopHoc.sMaHS = @mahs

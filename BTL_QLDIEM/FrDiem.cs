@@ -136,6 +136,15 @@ namespace BTL_QLDIEM
         {
         
             hienDSDiem();
+            grvDiem.Columns[0].HeaderText = "Mã HS";
+            grvDiem.Columns[1].HeaderText = "Họ tên";
+            grvDiem.Columns[2].HeaderText = "Mã năm học";
+            grvDiem.Columns[3].HeaderText = "Mã học kỳ";
+            grvDiem.Columns[4].HeaderText = "Mã môn học";
+            grvDiem.Columns[5].HeaderText = "Điểm miệng";
+            grvDiem.Columns[6].HeaderText = "Điểm 15P";
+            grvDiem.Columns[7].HeaderText = "Điểm 45p";
+            grvDiem.Columns[8].HeaderText = "Điểm HK";
         }
 
         private void btnThem_Click(object sender, EventArgs e)
